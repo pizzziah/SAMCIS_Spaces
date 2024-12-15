@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -58,31 +59,43 @@ public class UserBookingFragment extends Fragment {
     }
 
     private void fetchBookings() {
+        // Fetch bookings for the current user
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Replace with dynamic user ID, e.g., FirebaseAuth.getInstance().getCurrentUser().getUid()
+
         db.collection("Users")
-                .get()
+                .document(userId)  // Access the user's document by UID
+                .collection("bookings")  // Access the bookings collection
+                .get()  // Get all bookings for the user
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     todayList.clear();
                     pastList.clear();
 
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        // Map Firestore document to Booking object
-                        Booking booking = doc.toObject(Booking.class);
-                        //booking.setId(doc.getId()); // Set the document ID manually
+                    if (queryDocumentSnapshots != null) {
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            // Create a Booking object from the document
+                            String date = doc.getString("date");  // Retrieve the date field
+                            String venueName = doc.getString("venueName");  // Retrieve the venueName field
 
-                        // Check if the booking is for today
-                        if (booking.isToday()) {
-                            todayList.add(booking);
-                        } else {
-                            pastList.add(booking);
+                            // Create a new Booking instance with a placeholder id (e.g., "")
+                            Booking booking = new Booking("", venueName, date);
+
+                            // Check if the booking is for today
+                            if (booking.isToday()) {
+                                todayList.add(booking);
+                            } else {
+                                pastList.add(booking);
+                            }
                         }
+
+                        // Notify the adapters about data changes
+                        todayAdapter.notifyDataSetChanged();
+                        pastAdapter.notifyDataSetChanged();
                     }
-                    // Notify adapters about data changes
-                    todayAdapter.notifyDataSetChanged();
-                    pastAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
                     // Handle errors (e.g., network issues, Firestore exceptions)
                     e.printStackTrace();
                 });
     }
+
 }
