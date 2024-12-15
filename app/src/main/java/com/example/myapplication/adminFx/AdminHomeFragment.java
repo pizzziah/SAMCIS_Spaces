@@ -29,7 +29,6 @@ public class AdminHomeFragment extends Fragment {
     private List<AdminBooking> bookingList;
     private FirebaseFirestore db;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,37 +52,59 @@ public class AdminHomeFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void fetchBookings() {
-        // Reference to the parent document (e.g., User document)
-        DocumentReference userDocument = db.collection("Users").document("UserID");  // Change "UserID" to the actual user ID you want
+        // Reference to the Firestore collection for all users
+        CollectionReference usersCollection = db.collection("Users");
 
-        // Reference to the "bookings" subcollection
-        CollectionReference bookingsSubcollection = userDocument.collection("bookings");
+        // Log the Firestore path for debugging purposes
+        Log.d("FirestorePath", "Fetching all bookings from all users");
 
-        // Fetch bookings from the subcollection
-        bookingsSubcollection
-                .get()
+        // Fetch all users' bookings from Firestore
+        usersCollection.get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        bookingList.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            AdminBooking booking = document.toObject(AdminBooking.class);
-                            booking.setBookingId(document.getId()); // Store document ID for operations
-                            bookingList.add(booking);
+                        bookingList.clear(); // Clear the existing list to prevent duplicates
 
-                            // Debugging - Log the fetched data
-                            Log.d("BookingData", "Fetched booking: " + booking.getBookingId());
+                        // Iterate over each user document
+                        for (QueryDocumentSnapshot userDoc : task.getResult()) {
+                            // Reference to the bookings subcollection of the current user
+                            CollectionReference bookingsSubcollection = userDoc
+                                    .getReference()
+                                    .collection("bookings");
+
+                            // Fetch the bookings for this user
+                            bookingsSubcollection.get()
+                                    .addOnCompleteListener(subTask -> {
+                                        if (subTask.isSuccessful()) {
+                                            // Iterate through the bookings for this user
+                                            for (QueryDocumentSnapshot bookingDoc : subTask.getResult()) {
+                                                // Convert the document to AdminBooking object
+                                                AdminBooking booking = bookingDoc.toObject(AdminBooking.class);
+                                                booking.setBookingId(bookingDoc.getId()); // Store document ID
+
+                                                // Log the fetched booking data
+                                                Log.d("BookingData", "Fetched booking: " + booking.getBookingId());
+
+                                                // Add the booking to the list
+                                                bookingList.add(booking);
+                                            }
+
+                                            // Log the size of the list after adding the bookings
+                                            Log.d("BookingList", "Booking list size after adding bookings: " + bookingList.size());
+
+                                            // Notify the adapter to refresh the RecyclerView
+                                            adminBookingAdapter.notifyDataSetChanged();
+                                        } else {
+                                            // Handle error fetching bookings for this user
+                                            Log.e("FirestoreError", "Error fetching bookings for user: " + userDoc.getId(), subTask.getException());
+                                        }
+                                    });
                         }
-
-                        // Check if the list is populated
-                        Log.d("BookingList", "Booking list size: " + bookingList.size());
-
-                        // Notify adapter to update the view
-                        adminBookingAdapter.notifyDataSetChanged();
                     } else {
-                        Toast.makeText(getContext(), "Failed to fetch bookings", Toast.LENGTH_SHORT).show();
+                        // Handle error fetching users
+                        Log.e("FirestoreError", "Error fetching users: ", task.getException());
+                        Toast.makeText(getContext(), "Failed to fetch users", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-
-
 }
+

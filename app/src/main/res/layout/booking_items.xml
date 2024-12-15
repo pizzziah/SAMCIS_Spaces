@@ -9,10 +9,10 @@
 
     <!-- Booking ID Text -->
     <TextView
-        android:id="@+id/textViewBookingId"
+        android:id="@+id/textViewName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Booking ID: 12345"
+        android:text="Booking Name"
         android:textSize="16sp"
         android:textStyle="bold"
         android:paddingBottom="8dp"

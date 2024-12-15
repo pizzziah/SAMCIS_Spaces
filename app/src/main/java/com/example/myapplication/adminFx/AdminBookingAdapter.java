@@ -20,7 +20,7 @@ import java.util.List;
 
 public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapter.ViewHolder> {
 
-    private List<AdminBooking> bookingList; // List of bookings
+    private List<AdminBooking> bookingList;
     private Context context;
     private FirebaseFirestore db;
 
@@ -44,7 +44,7 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
         AdminBooking booking = bookingList.get(position);
 
         // Bind the booking details to the UI
-        holder.textViewBookingId.setText("Booking ID: " + booking.getBookingId());
+        holder.textViewName.setText("Booking ID: " + booking.getUser());
         holder.textViewBookingDetails.setText("Details: " + booking.getBookingDetails());
 
         // View Details Button
@@ -69,14 +69,16 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
                 .setMessage("Booking ID: " + booking.getBookingId() + "\n" +
                         "Details: " + booking.getBookingDetails() + "\n" +
                         "Booking Date: " + booking.getBookingDate() + "\n" +
-                        "Status: " + booking.getStatus())
+                        "Status: " + booking.getBookingStatus())
                 .setPositiveButton("OK", null)
                 .show();
     }
 
     // Approve Booking by updating its status in Firestore
     private void approveBooking(String bookingId, int position) {
-        db.collection("Users.booking").document(bookingId)
+        // Correct Firestore path
+        String userId = "UserID";  // Replace with actual user ID
+        db.collection("Users").document(userId).collection("bookings").document(bookingId)
                 .update("status", "true")
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(context, "Booking approved successfully!", Toast.LENGTH_SHORT).show();
@@ -89,7 +91,9 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
 
     // Deny Booking by updating its status in Firestore
     private void denyBooking(String bookingId, int position) {
-        db.collection("Users.bookings").document(bookingId)
+        // Correct Firestore path
+        String userId = "UserID";  // Replace with actual user ID
+        db.collection("Users").document(userId).collection("bookings").document(bookingId)
                 .update("status", "false")
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(context, "Booking denied successfully!", Toast.LENGTH_SHORT).show();
@@ -101,13 +105,13 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewBookingId, textViewBookingDetails;
+        TextView textViewName, textViewBookingDetails;
         Button buttonViewDetails, buttonApprove, buttonDeny;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // Initialize UI components
-            textViewBookingId = itemView.findViewById(R.id.textViewBookingId);
+            textViewName = itemView.findViewById(R.id.textViewName);
             textViewBookingDetails = itemView.findViewById(R.id.textViewBookingDetails);
             buttonViewDetails = itemView.findViewById(R.id.buttonViewDetails);
             buttonApprove = itemView.findViewById(R.id.buttonApprove);
