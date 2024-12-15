@@ -56,6 +56,11 @@
             android:name=".userFx.AdminApplication"
             android:exported="true" />
 
+        <activity
+            android:name=".userFx.EditProfileActivity"
+            android:exported="true" />
+
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
