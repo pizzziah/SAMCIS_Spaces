@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
 import com.example.myapplication.startUp.Login;
-import com.example.myapplication.userFx.EditProfileActivity;
+import com.example.myapplication.userFx.UsersEditProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -56,7 +56,7 @@ public class AdminProfileFragment extends Fragment {
         loadUserProfile();
 
         editProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+            Intent intent = new Intent(getActivity(), UsersEditProfileActivity.class);
             intent.putExtra("UserCategory", userCategory.getText().toString());
             startActivity(intent);
         });

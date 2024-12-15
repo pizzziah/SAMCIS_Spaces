@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/light_brown"
     android:padding="24dp"
-    tools:context=".userFx.EditProfileActivity">
+    tools:context=".userFx.UsersEditProfileActivity">
 
     <LinearLayout
         android:id="@+id/startupContainer"
@@ -133,18 +133,7 @@
                 android:drawableTint="@color/shadow"/>
 
             <!-- Apply as Admin -->
-            <TextView
-                android:id="@+id/applyAsAdmin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Click here to apply as admin "
-                android:textColor="@color/yellow"
-                android:textStyle="italic"
-                android:background="@color/blue"
-                android:layout_gravity="center"
-                android:fontFamily="@font/poppins_medium"
-                android:layout_marginTop="25dp"
-                android:textSize="14sp" />
+
 
             <!--Buttons-->
             <LinearLayout

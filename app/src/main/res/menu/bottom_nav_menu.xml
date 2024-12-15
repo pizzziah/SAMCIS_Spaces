@@ -7,7 +7,7 @@
 
     <item
         android:id="@+id/edit"
-        android:icon="@drawable/ic_booking"
+        android:icon="@drawable/ic_pen"
         android:title="Edit" />
 
     <item

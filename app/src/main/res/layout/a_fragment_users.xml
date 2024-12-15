@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@drawable/bg_yellow_gradient"
+    android:background="@drawable/bg_blue_gradient"
     tools:context=".adminFx.AdminUsersFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="30dp">
 
         <!-- Page Title -->
         <LinearLayout
@@ -25,8 +25,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Users"
-                android:textSize="50dp"
-                android:textColor="#FFFF"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/yellow"
+                android:textSize="40dp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -36,23 +37,24 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="16dp"
-            android:background="@color/blue"
+            android:background="@color/yellow"
             android:padding="15dp">
 
             <ImageButton
                 android:id="@+id/backButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_back_bttn"
+                android:src="@drawable/ic_back_bttn_black"
                 android:background="?android:attr/selectableItemBackground" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="All Users"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/blue"
                 android:textStyle="bold"
                 android:textSize="18sp"
+                android:fontFamily="@font/montserrat_bold"
                 android:layout_marginTop="10dp" />
 
             <!-- RecyclerView -->

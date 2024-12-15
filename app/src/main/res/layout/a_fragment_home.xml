@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".userFx.UserBookingFragment"
     android:background="@drawable/bg_blue_gradient"
-    android:padding="16dp">
+    android:padding="30dp">
 
     <!-- Heading -->
     <TextView
@@ -15,8 +15,9 @@
         android:text="Booking"
         android:textSize="40dp"
         android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="16dp" />
+        android:textColor="@color/yellow"
+        android:fontFamily="@font/montserrat_bold"
+        android:layout_marginBottom="30dp" />
 
 
     <LinearLayout
@@ -60,6 +61,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="15dp"
             android:orientation="vertical">
 
             <TextView
@@ -97,34 +99,38 @@
                         android:id="@+id/bookingDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_medium"
                         android:text="November 16"
-                        android:textColor="#FFA500"
-                        android:textSize="16sp"
+                        android:textColor="@color/yellow"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/bookingTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_medium"
                         android:text="10:00 am - 10:30 am"
                         android:textColor="#ffffff"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/receivedDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Received: October 30"
+                        android:fontFamily="@font/poppins_medium"
                         android:textColor="#bbbbbb"
-                        android:textSize="12sp" />
+                        android:textSize="10sp" />
 
                     <TextView
                         android:id="@+id/viewDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="View Details"
+                        android:fontFamily="@font/poppins_medium"
                         android:textColor="#5B9DFE"
-                        android:textSize="12sp" />
+                        android:textSize="10sp" />
                 </LinearLayout>
 
                 <!-- Approve and Deny Buttons -->
@@ -136,27 +142,28 @@
 
                     <Button
                         android:id="@+id/buttonApprove"
-                        android:layout_width="wrap_content"
+                        android:layout_width="110dp"
                         android:layout_height="48dp"
+                        android:layout_gravity="center"
                         android:backgroundTint="#99D7D7D7"
+                        android:fontFamily="@font/montserrat_bold"
                         android:text="Approve"
                         android:textColor="@color/black"
                         android:textSize="12sp" />
 
                     <Button
                         android:id="@+id/buttonDeny"
-                        android:layout_width="wrap_content"
+                        android:layout_width="110dp"
                         android:layout_height="48dp"
+                        android:layout_gravity="center"
                         android:layout_marginTop="5dp"
                         android:backgroundTint="#9DFFBF55"
                         android:text="Deny"
+                        android:fontFamily="@font/montserrat_bold"
                         android:textColor="@color/black"
                         android:textSize="12sp" />
                 </LinearLayout>
-
             </LinearLayout>
-
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
