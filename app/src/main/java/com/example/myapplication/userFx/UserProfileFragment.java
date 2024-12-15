@@ -23,7 +23,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserProfileFragment extends Fragment {
 
-    TextView userName, userCategory, idNumInfo, programInfo, yearLevelInfo, departmentInfo, editProfile;
+    TextView userName, userCategory, idNumTitle, idNumInfo, programTitle, programInfo,
+            yearLevelTitle, yearLevelInfo, departmentTitle, departmentInfo, editProfile;
     ImageView userImage;
     Button logoutButton;
     FirebaseAuth auth;
@@ -41,18 +42,22 @@ public class UserProfileFragment extends Fragment {
         editProfile = view.findViewById(R.id.editProfile);
         userName = view.findViewById(R.id.userName);
         userCategory = view.findViewById(R.id.userCat);
+        idNumTitle = view.findViewById(R.id.IDNumTitle);
         idNumInfo = view.findViewById(R.id.IDNumInfo);
+        programTitle = view.findViewById(R.id.programTitle);
         programInfo = view.findViewById(R.id.programInfo);
+        yearLevelTitle = view.findViewById(R.id.yearLevelTitle);
         yearLevelInfo = view.findViewById(R.id.yearLevelInfo);
+        departmentTitle = view.findViewById(R.id.departmentTitle);
         departmentInfo = view.findViewById(R.id.departmentInfo);
         userImage = view.findViewById(R.id.img);
         logoutButton = view.findViewById(R.id.logoutButton);
 
         loadUserProfile();
 
-        // Edit profile redirect
         editProfile.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+            intent.putExtra("UserCategory", userCategory.getText().toString());
             startActivity(intent);
         });
 
@@ -77,28 +82,46 @@ public class UserProfileFragment extends Fragment {
                         if (documentSnapshot.exists()) {
                             String name = documentSnapshot.contains("FullName") ? documentSnapshot.getString("FullName") : "N/A";
                             String category = documentSnapshot.contains("Category") ? documentSnapshot.getString("Category") : "N/A";
+                            String idNumber = documentSnapshot.contains("ID Number") ? documentSnapshot.getString("ID Number") : "N/A";
 
                             userName.setText(name);
                             userCategory.setText(category);
-
-                            if (documentSnapshot.contains("idNumber")) {
-                                idNumInfo.setText(documentSnapshot.getString("idNumber"));
-                            }
+                            idNumInfo.setText(idNumber);
 
                             if ("Student".equalsIgnoreCase(category)) {
-                                programInfo.setText(documentSnapshot.contains("Program") ? documentSnapshot.getString("Program") : "N/A");
-                                yearLevelInfo.setText(documentSnapshot.contains("yearLevel") ? documentSnapshot.getString("yearLevel") : "N/A");
+                                String program = documentSnapshot.contains("Program") ? documentSnapshot.getString("Program") : "N/A";
+                                String yearLevel = documentSnapshot.contains("Year Level") ? documentSnapshot.getString("Year Level") : "N/A";
 
+                                programInfo.setText(program);
+                                yearLevelInfo.setText(yearLevel);
+
+                                programTitle.setVisibility(View.VISIBLE);
                                 programInfo.setVisibility(View.VISIBLE);
+                                yearLevelTitle.setVisibility(View.VISIBLE);
                                 yearLevelInfo.setVisibility(View.VISIBLE);
+                                idNumTitle.setVisibility(View.VISIBLE);
+                                idNumInfo.setVisibility(View.VISIBLE);
+
+                                departmentTitle.setVisibility(View.GONE);
                                 departmentInfo.setVisibility(View.GONE);
 
                             } else if ("Faculty".equalsIgnoreCase(category)) {
-                                departmentInfo.setText(documentSnapshot.contains("Department") ? documentSnapshot.getString("Department") : "N/A");
+                                String department = documentSnapshot.contains("Department") ? documentSnapshot.getString("Department") : "N/A";
 
-                                programInfo.setVisibility(View.GONE);
-                                yearLevelInfo.setVisibility(View.GONE);
+                                departmentInfo.setText(department);
+
+                                departmentTitle.setVisibility(View.VISIBLE);
                                 departmentInfo.setVisibility(View.VISIBLE);
+                                idNumTitle.setVisibility(View.VISIBLE);
+                                idNumInfo.setVisibility(View.VISIBLE);
+
+                                programTitle.setVisibility(View.GONE);
+                                programInfo.setVisibility(View.GONE);
+                                yearLevelTitle.setVisibility(View.GONE);
+                                yearLevelInfo.setVisibility(View.GONE);
+
+                            } else {
+                                Toast.makeText(getActivity(), "Invalid category!", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(getActivity(), "User data not found!", Toast.LENGTH_SHORT).show();
@@ -109,7 +132,8 @@ public class UserProfileFragment extends Fragment {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "Failed to load profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     });
-
+        } else {
+            Toast.makeText(getActivity(), "User not logged in!", Toast.LENGTH_SHORT).show();
         }
     }
 }

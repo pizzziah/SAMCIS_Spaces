@@ -13,8 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
-import com.example.myapplication.startUp.FacultyCreateProfile;
-import com.example.myapplication.startUp.SignUp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,11 +35,11 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        // Initialize Firebase instances
+        userCategory = getIntent().getStringExtra("UserCategory");
+
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Initialize UI components
         emailInput = findViewById(R.id.editEmail);
         nameInput = findViewById(R.id.editName);
         pwdInput = findViewById(R.id.editPassword);
@@ -50,7 +48,6 @@ public class EditProfileActivity extends AppCompatActivity {
         cancelBttn = findViewById(R.id.cancelBttn);
         saveBttn = findViewById(R.id.saveBttn);
 
-        // New EditTexts for additional fields
         departmentInput = findViewById(R.id.editDepartment);
         yearLevelInput = findViewById(R.id.editYearLevel);
         programInput = findViewById(R.id.editProgram);
@@ -59,28 +56,31 @@ public class EditProfileActivity extends AppCompatActivity {
 
         updateFieldVisibility();
 
-        cancelBttn.setOnClickListener(v -> finish());
+        cancelBttn.setOnClickListener(v -> {
+            startActivity(new Intent(EditProfileActivity.this, UserProfileFragment.class));
+            finish();
+        });
+
         saveBttn.setOnClickListener(v -> updateUserProfile());
 
-        adminApply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EditProfileActivity.this, AdminApplication.class);
-                startActivity(intent);
-                finish();
-            }
+        adminApply.setOnClickListener(v -> {
+            startActivity(new Intent(EditProfileActivity.this, AdminApplication.class));
+            finish();
         });
     }
 
     private void updateFieldVisibility() {
+        departmentInput.setVisibility(View.GONE);
+        yearLevelInput.setVisibility(View.GONE);
+        programInput.setVisibility(View.GONE);
+
         if ("Faculty".equalsIgnoreCase(userCategory)) {
             departmentInput.setVisibility(View.VISIBLE);
-            yearLevelInput.setVisibility(View.GONE);
-            programInput.setVisibility(View.GONE);
         } else if ("Student".equalsIgnoreCase(userCategory)) {
             yearLevelInput.setVisibility(View.VISIBLE);
             programInput.setVisibility(View.VISIBLE);
-            departmentInput.setVisibility(View.GONE);
+        } else {
+            Toast.makeText(this, "User category is undefined!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -97,24 +97,21 @@ public class EditProfileActivity extends AppCompatActivity {
         if (user != null) {
             String userId = user.getUid();
 
-            if (TextUtils.isEmpty(name)) {
-                nameInput.setError("Name cannot be empty");
-                return;
-            }
-
-            if (!TextUtils.isEmpty(pwd) && !pwd.equals(confirmPass)) {
-                confirmPwd.setError("Passwords do not match");
-                return;
-            }
-
             Map<String, Object> updates = new HashMap<>();
-            updates.put("FullName", name);
 
-            if ("Faculty".equalsIgnoreCase(userCategory)) {
+            if (!TextUtils.isEmpty(name)) {
+                updates.put("FullName", name);
+            }
+            if ("Faculty".equalsIgnoreCase(userCategory) && !TextUtils.isEmpty(department)) {
                 updates.put("Department", department);
-            } else if ("Student".equalsIgnoreCase(userCategory)) {
-                updates.put("YearLevel", yearLevel);
-                updates.put("Program", program);
+            }
+            if ("Student".equalsIgnoreCase(userCategory)) {
+                if (!TextUtils.isEmpty(yearLevel)) {
+                    updates.put("YearLevel", yearLevel);
+                }
+                if (!TextUtils.isEmpty(program)) {
+                    updates.put("Program", program);
+                }
             }
 
             db.collection("Users").document(userId)
@@ -129,9 +126,14 @@ public class EditProfileActivity extends AppCompatActivity {
                         }
 
                         if (!TextUtils.isEmpty(pwd)) {
-                            user.updatePassword(pwd)
-                                    .addOnSuccessListener(a -> Toast.makeText(this, "Password updated", Toast.LENGTH_SHORT).show())
-                                    .addOnFailureListener(e -> Toast.makeText(this, "Password update failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                            if (pwd.equals(confirmPass)) {
+                                user.updatePassword(pwd)
+                                        .addOnSuccessListener(a -> Toast.makeText(this, "Password updated", Toast.LENGTH_SHORT).show())
+                                        .addOnFailureListener(e -> Toast.makeText(this, "Password update failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                            } else {
+                                confirmPwd.setError("Passwords do not match");
+                                return;
+                            }
                         }
 
                         Intent intent = new Intent(EditProfileActivity.this, UserProfileFragment.class);
@@ -139,9 +141,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(EditProfileActivity.this, "Failed to update profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    });
+                    .addOnFailureListener(e -> Toast.makeText(EditProfileActivity.this, "Failed to update profile: " + e.getMessage(), Toast.LENGTH_LONG).show());
         }
     }
 }

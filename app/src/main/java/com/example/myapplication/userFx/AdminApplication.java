@@ -16,29 +16,26 @@ public class AdminApplication extends AppCompatActivity {
     private EditText enterCode;
     private Button cancelBttn, saveBttn;
 
-    // The valid verification code
-    private static final String VALID_CODE = "abcd1234";
+    private static final String VALID_CODE = "123454321";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_application);
 
-        // Initialize views
         enterCode = findViewById(R.id.enterCode);
         cancelBttn = findViewById(R.id.cancelBttn);
         saveBttn = findViewById(R.id.saveBttn);
 
-        // Cancel Button Logic: Return to the previous screen
-        cancelBttn.setOnClickListener(v -> finish());
+        cancelBttn.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminApplication.this, EditProfileActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
-        // Save Button Logic: Validate the verification code
         saveBttn.setOnClickListener(v -> verifyCode());
     }
 
-    /**
-     * Verifies the entered code and provides appropriate feedback.
-     */
     private void verifyCode() {
         String codeInput = enterCode.getText().toString().trim();
 
