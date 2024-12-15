@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.myapplication.adminFx.AdminBookingFragment;
+import com.example.myapplication.adminFx.AdminUsersFragment;
 import com.example.myapplication.adminFx.AdminHomeFragment;
 import com.example.myapplication.adminFx.AdminProfileFragment;
 import com.example.myapplication.databinding.ActivityMainBinding;
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             replaceFragment(new UserHomeFragment());
         }
 
+        // Setup the bottom navigation listener
         binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -47,15 +48,15 @@ public class MainActivity extends AppCompatActivity {
                 if ("Admin".equals(userRole)) {
                     if (menuItemId == R.id.home) {
                         replaceFragment(new AdminHomeFragment());
-                    } else if (menuItemId == R.id.booking) {
-                        replaceFragment(new AdminBookingFragment());
+                    } else if (menuItemId == R.id.users) {
+                        replaceFragment(new AdminUsersFragment());
                     } else if (menuItemId == R.id.profile) {
                         replaceFragment(new AdminProfileFragment());
                     }
                     return true;
                 }
 
-                if ("User".equals(userRole)) {  // Corrected here
+                if ("User".equals(userRole)) {
                     if (menuItemId == R.id.home) {
                         replaceFragment(new UserHomeFragment());
                     } else if (menuItemId == R.id.booking) {
@@ -65,11 +66,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return true;
                 }
+
                 return false;
             }
         });
     }
 
+    // Method to replace fragments in the container
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
