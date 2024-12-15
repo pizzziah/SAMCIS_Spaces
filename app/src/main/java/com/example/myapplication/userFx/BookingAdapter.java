@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -81,7 +82,6 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
                     holder.btnCancel.setVisibility(View.VISIBLE);
                 });
 
-        // Cancel button logic
         holder.btnCancel.setOnClickListener(v -> {
             db.collection("Users")
                     .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -89,19 +89,29 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
                     .document(booking.getId())
                     .delete()
                     .addOnSuccessListener(aVoid -> {
+                        // Remove the item from the list
                         bookingList.remove(position);
+                        // Notify that the item has been removed
                         notifyItemRemoved(position);
+                        // Notify that the range has been removed, if necessary
+                        notifyItemRangeChanged(position, bookingList.size());  // This ensures the RecyclerView is updated
+                        Toast.makeText(v.getContext(), "Booking canceled successfully", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> {
                         e.printStackTrace();
-                        // Optionally show a Toast for failure
+                        Toast.makeText(v.getContext(), "Failed to cancel booking", Toast.LENGTH_SHORT).show();
                     });
         });
 
+
+
         // Update button logic
         holder.btnUpdate.setOnClickListener(v -> {
+            // Pass all necessary data to the UpdateBookingActivity
             Intent intent = new Intent(v.getContext(), UpdateBookingActivity.class);
             intent.putExtra("bookingId", booking.getId());
+            intent.putExtra("venueName", booking.getVenueName());  // Pass venueName
+            intent.putExtra("date", booking.getDate());            // Pass date
             v.getContext().startActivity(intent);
         });
     }
@@ -121,7 +131,6 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             super(itemView);
             venueName = itemView.findViewById(R.id.venueName);
             bookingDate = itemView.findViewById(R.id.bookingDate);
-            bookingStatus = itemView.findViewById(R.id.bookingStatus);
             venueImage = itemView.findViewById(R.id.venueImage);
             btnCancel = itemView.findViewById(R.id.btnCancel);
             btnUpdate = itemView.findViewById(R.id.btnUpdate);

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
@@ -19,80 +21,94 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AdminHomeFragment extends Fragment {
 
-    private FirebaseFirestore db;
+    private static final String TAG = "AdminHomeFragment"; // For logging
+    private FirebaseFirestore db; // Firestore instance
 
     public AdminHomeFragment() {
+        // Default constructor required
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance(); // Initialize Firestore
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.u_fragment_home, container, false);
 
-        Log.e("UserBookingFragment", "Venue");
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.a_fragment_home, container, false);
+        Log.d(TAG, "AdminHomeFragment View initialized");
 
-        Button buttonDevesse = view.findViewById(R.id.check_availability_button_devesse);
-        Button buttonAmphi = view.findViewById(R.id.check_availability_button_amphi);
-        Button buttonOval = view.findViewById(R.id.check_availability_button_oval);
-        Button buttonLab = view.findViewById(R.id.check_availability_button_lab);
+        // Initialize buttons
+        Button pendingButton = view.findViewById(R.id.pendingBttn);
+        Button approvedButton = view.findViewById(R.id.approvedBttn);
+        Button approveButton = view.findViewById(R.id.buttonApprove);
+        Button denyButton = view.findViewById(R.id.buttonDeny);
 
-        buttonDevesse.setOnClickListener(v -> fetchVenueDetails("AjNc3sDvHrvNIH4fXNvd"));
-        buttonAmphi.setOnClickListener(v -> fetchVenueDetails("mm4OzygytxnJ6oG3JDel"));
-        buttonOval.setOnClickListener(v -> fetchVenueDetails("yjFP5Z7Wy5IgXCNQbBKp"));
-        buttonLab.setOnClickListener(v -> fetchVenueDetails("s74Ke9aLcijQz0cE9yla"));
+        // Button click listeners
+        pendingButton.setOnClickListener(v -> fetchBookingDetails("pending_doc_id"));
+        approvedButton.setOnClickListener(v -> fetchBookingDetails("approved_doc_id"));
+        approveButton.setOnClickListener(v -> fetchBookingDetails("approve_doc_id"));
+        denyButton.setOnClickListener(v -> fetchBookingDetails("deny_doc_id"));
 
         return view;
     }
 
-    private void fetchVenueDetails(String venueId) {
-        Log.e("UserBookingFragment", "Fetching Firestore document: " + venueId);
+    /**
+     * Fetch booking details from Firestore based on document ID.
+     *
+     * @param venueId The document ID to fetch data from Firestore.
+     */
+    private void fetchBookingDetails(String venueId) {
+        Log.d(TAG, "Fetching Firestore document: " + venueId);
 
-        DocumentReference venueRef = db.collection("venues").document(venueId);
-
+        DocumentReference venueRef = db.collection("Bookings").document(venueId);
         venueRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Log.e("UserBookingFragment", "DocumentSnapshot data: " + document.getData());
+                if (document != null && document.exists()) {
+                    Log.d(TAG, "Document data: " + document.getData());
 
-                    // Fetch data with correct field names
+                    // Fetch fields
                     Boolean venueAvailability = document.getBoolean("available");
                     String venueFloor = document.getString("floor");
                     String venueName = document.getString("name");
 
-
                     if (venueName != null && venueFloor != null) {
                         openBookingActivity(venueName, venueFloor, venueAvailability);
                     } else {
-                        Log.e("UserBookingFragment", "Venue details are incomplete");
-                        Toast.makeText(getActivity(), "Venue details are incomplete", Toast.LENGTH_SHORT).show();
+                        showToast("Venue details are incomplete");
+                        Log.w(TAG, "Missing fields in the document");
                     }
                 } else {
-                    Log.e("UserBookingFragment", "No such document found for " + venueId);
-                    Toast.makeText(getActivity(), "Venue details not found", Toast.LENGTH_SHORT).show();
+                    showToast("No venue details found");
+                    Log.w(TAG, "No document found for ID: " + venueId);
                 }
             } else {
-                Log.e("UserBookingFragment", "Fetch failed: " + task.getException());
-                Toast.makeText(getActivity(), "Failed to load venue details", Toast.LENGTH_SHORT).show();
+                showToast("Error loading venue details");
+                Log.e(TAG, "Firestore error: ", task.getException());
             }
         });
     }
 
-    private void openBookingActivity(String venueName, String venueFloor, Boolean venueAvailability) {
-        Log.e("UserBookingFragment", "Trying to open Booking Activity");
-
+    /**
+     * Launch the BookingConfirmation activity with venue details.
+     */
+    private void openBookingActivity(String name, String floor, Boolean isAvailable) {
         Intent intent = new Intent(getActivity(), bookingConfirmation.class);
-
-        intent.putExtra("venueName", venueName);
-        intent.putExtra("venueFloor", venueFloor);
-        intent.putExtra("venueAvailability", venueAvailability);
-
+        intent.putExtra("VENUE_NAME", name);
+        intent.putExtra("VENUE_FLOOR", floor);
+        intent.putExtra("VENUE_AVAILABLE", isAvailable != null && isAvailable);
         startActivity(intent);
+    }
+
+    /**
+     * Display a short Toast message.
+     */
+    private void showToast(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 }
