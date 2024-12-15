@@ -39,83 +39,59 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
     public void onBindViewHolder(@NonNull BookingViewHolder holder, int position) {
         Booking booking = bookingList.get(position);
 
+        // Ensure booking is not null
+        if (booking == null) return;
+
         // Set basic booking details
         holder.venueName.setText(booking.getVenueName() != null ? booking.getVenueName() : "Unknown Venue");
         holder.bookingDate.setText(booking.getDate() != null ? "Date: " + booking.getDate() : "No Date");
 
-        // Fetch status field from Firestore
-        db.collection("Users")
-                .document(FirebaseAuth.getInstance().getCurrentUser().getUid()) // Access user's document
-                .collection("bookings")
-                .document(booking.getId()) // Access specific booking document
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Boolean status = documentSnapshot.getBoolean("status");
-                        if (status == null) {
-                            holder.bookingStatus.setText("Pending..");
-                            // Keep buttons visible if status is null
-                            holder.btnUpdate.setVisibility(View.VISIBLE);
-                            holder.btnCancel.setVisibility(View.VISIBLE);
-                        } else if (status) {
-                            holder.bookingStatus.setText("Booking accepted!");
-                            // Hide buttons if status is true
-                            holder.btnUpdate.setVisibility(View.GONE);
-                            holder.btnCancel.setVisibility(View.GONE);
-                        } else {
-                            holder.bookingStatus.setText("Booking declined");
-                            // Hide buttons if status is false
-                            holder.btnUpdate.setVisibility(View.GONE);
-                            holder.btnCancel.setVisibility(View.GONE);
-                        }
-                    } else {
-                        holder.bookingStatus.setText("Pending..");
-                        // Keep buttons visible if document doesn't exist
-                        holder.btnUpdate.setVisibility(View.VISIBLE);
-                        holder.btnCancel.setVisibility(View.VISIBLE);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    holder.bookingStatus.setText("Pending..");
-                    // Keep buttons visible if there's an error
-                    holder.btnUpdate.setVisibility(View.VISIBLE);
-                    holder.btnCancel.setVisibility(View.VISIBLE);
-                });
+        // Set booking status
+        Boolean status = booking.getStatus(); // Assuming you added `status` to Booking
+        if (status == null) {
+            holder.bookingStatus.setText("Pending..");
+            holder.btnUpdate.setVisibility(View.VISIBLE);
+            holder.btnCancel.setVisibility(View.VISIBLE);
+        } else if (status) {
+            holder.bookingStatus.setText("Booking accepted!");
+            holder.btnUpdate.setVisibility(View.GONE);
+            holder.btnCancel.setVisibility(View.GONE);
+        } else {
+            holder.bookingStatus.setText("Booking declined");
+            holder.btnUpdate.setVisibility(View.GONE);
+            holder.btnCancel.setVisibility(View.GONE);
+        }
 
+        // Cancel button logic
         holder.btnCancel.setOnClickListener(v -> {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            String bookingId = booking.getId();
+
             db.collection("Users")
-                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .document(userId)
                     .collection("bookings")
-                    .document(booking.getId())
+                    .document(bookingId)
                     .delete()
                     .addOnSuccessListener(aVoid -> {
-                        // Remove the item from the list
+                        // Remove the item from the list and notify the adapter
                         bookingList.remove(position);
-                        // Notify that the item has been removed
                         notifyItemRemoved(position);
-                        // Notify that the range has been removed, if necessary
-                        notifyItemRangeChanged(position, bookingList.size());  // This ensures the RecyclerView is updated
                         Toast.makeText(v.getContext(), "Booking canceled successfully", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> {
-                        e.printStackTrace();
-                        Toast.makeText(v.getContext(), "Failed to cancel booking", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), "Failed to cancel booking: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         });
 
-
-
         // Update button logic
         holder.btnUpdate.setOnClickListener(v -> {
-            // Pass all necessary data to the UpdateBookingActivity
             Intent intent = new Intent(v.getContext(), UpdateBookingActivity.class);
             intent.putExtra("bookingId", booking.getId());
-            intent.putExtra("venueName", booking.getVenueName());  // Pass venueName
-            intent.putExtra("date", booking.getDate());            // Pass date
+            intent.putExtra("venueName", booking.getVenueName());
+            intent.putExtra("date", booking.getDate());
             v.getContext().startActivity(intent);
         });
     }
-
 
     @Override
     public int getItemCount() {
@@ -131,6 +107,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             super(itemView);
             venueName = itemView.findViewById(R.id.venueName);
             bookingDate = itemView.findViewById(R.id.bookingDate);
+            bookingStatus = itemView.findViewById(R.id.bookingStatus);
             venueImage = itemView.findViewById(R.id.venueImage);
             btnCancel = itemView.findViewById(R.id.btnCancel);
             btnUpdate = itemView.findViewById(R.id.btnUpdate);

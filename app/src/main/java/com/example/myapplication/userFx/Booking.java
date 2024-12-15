@@ -1,27 +1,28 @@
 package com.example.myapplication.userFx;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 public class Booking {
-
     private String id;
     private String venueName;
-    private String date; // Format: "yyyy-MM-dd"
+    private String date;
+    private Boolean status;
 
-    // Default constructor (required for Firestore deserialization)
-    public Booking() {}
+    // Constructor with status
+    public Booking(String id, String venueName, String date, Boolean status) {
+        this.id = id;
+        this.venueName = venueName;
+        this.date = date;
+        this.status = status;
+    }
 
-    // Constructor
+    // Constructor without status
     public Booking(String id, String venueName, String date) {
         this.id = id;
         this.venueName = venueName;
         this.date = date;
+        this.status = null; // Default value for status
     }
 
-    // Getters and Setters
+    // Getters and setters (unchanged)
     public String getId() {
         return id;
     }
@@ -46,30 +47,11 @@ public class Booking {
         this.date = date;
     }
 
-    // Check if the booking date is today
-    public boolean isToday() {
-        if (date == null || date.isEmpty()) return false;
+    public Boolean getStatus() {
+        return status;
+    }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
-        try {
-            Date bookingDate = sdf.parse(date);
-            Calendar bookingCalendar = Calendar.getInstance();
-            bookingCalendar.setTime(bookingDate);
-
-            Calendar today = Calendar.getInstance();
-            today.set(Calendar.HOUR_OF_DAY, 0);
-            today.set(Calendar.MINUTE, 0);
-            today.set(Calendar.SECOND, 0);
-            today.set(Calendar.MILLISECOND, 0);
-
-            return bookingCalendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
-                    bookingCalendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }
