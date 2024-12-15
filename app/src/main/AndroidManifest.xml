@@ -17,7 +17,7 @@
         tools:targetApi="31">
         <activity
             android:name=".userFx.UpdateBookingActivity"
-            android:exported="false" />
+            android:exported="true" />
 
         <activity
             android:name=".main.MainActivity"
@@ -37,6 +37,7 @@
         <activity
             android:name=".startUp.SignUp"
             android:exported="true" />
+
 
         <!-- Create Profile - Student -->
         <activity
