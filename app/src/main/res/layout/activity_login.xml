@@ -38,7 +38,6 @@
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-
                 android:background="@drawable/bg_light_gray"
                 android:fontFamily="@font/poppins_medium"
                 android:hint="Enter Email"
@@ -51,7 +50,6 @@
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-
                 android:layout_marginTop="16dp"
                 android:background="@drawable/bg_light_gray"
                 android:drawableEnd="@drawable/ic_eye_slash"
@@ -66,7 +64,6 @@
             <Button
                 android:id="@+id/loginButton"
                 android:layout_width="160dp"
-
                 android:layout_height="55dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="40dp"

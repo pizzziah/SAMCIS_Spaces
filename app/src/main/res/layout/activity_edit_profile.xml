@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signUpPage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_brown"
+    android:padding="24dp"
+    tools:context=".startUp.SignUp">
+
+    <LinearLayout
+        android:id="@+id/startupContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/editProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:textAlignment="center"
+            android:fontFamily="@font/montserrat_bold"
+            android:shadowColor="@color/shadow"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="10"
+            android:text="Edit Profile"
+            android:textColor="#143373"
+            android:textSize="25sp" />
+
+        <!--INFORMATION CONTAINER-->
+        <LinearLayout
+            android:id="@+id/infoInputContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:layout_marginTop="5dp">
+
+            <!--Email-->
+            <EditText
+                android:id="@+id/editEmail"
+                android:inputType="textEmailAddress"
+                android:hint="Edit Email"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_light_gray"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_medium"/>
+
+            <!--Name-->
+            <EditText
+                android:id="@+id/editName"
+                android:inputType="textPersonName"
+                android:hint="Edit Full Name"
+                android:layout_width="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_light_gray"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_medium"/>
+
+            <!--Pwd-->
+            <EditText
+                android:id="@+id/editPassword"
+                android:hint="Edit Password"
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_light_gray"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_medium"
+                android:drawableEnd="@drawable/ic_eye_slash"
+                android:drawableTint="@color/shadow"/>
+
+            <!--Confirm Pwd-->
+            <EditText
+                android:id="@+id/confirmPwd"
+                android:hint="Confirm New Password"
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_light_gray"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_medium"
+                android:drawableEnd="@drawable/ic_eye_slash"
+                android:drawableTint="@color/shadow"/>
+
+            <!-- Apply as Admin -->
+            <TextView
+                android:id="@+id/applyAsAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Click here to apply as admin "
+                android:textColor="@color/yellow"
+                android:textStyle="italic"
+                android:background="@color/blue"
+                android:layout_gravity="center"
+                android:fontFamily="@font/poppins_medium"
+                android:layout_marginTop="25dp"
+                android:textSize="14sp" />
+
+            <!--Buttons-->
+            <LinearLayout
+                android:id="@+id/buttonContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="25dp">
+
+                <!-- Cancel Button -->
+                <Button
+                    android:id="@+id/cancelBttn"
+                    android:text="Cancel"
+                    android:layout_width="160dp"
+                    android:layout_height="55dp"
+                    android:layout_marginEnd="16dp"
+                    android:backgroundTint="#99D7D7D7"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/montserrat_bold" />
+
+                <!-- Save Button -->
+                <Button
+                    android:id="@+id/saveBttn"
+                    android:text="Save"
+                    android:layout_width="160dp"
+                    android:layout_height="55dp"
+                    android:backgroundTint="#9DFFBF55"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/montserrat_bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

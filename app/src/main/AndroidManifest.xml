@@ -15,40 +15,58 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
+
         <activity
             android:name=".userFx.BookingHistoryActivity"
             android:exported="false" />
+
         <!-- Sign-up activity -->
         <activity
             android:name=".main.MainActivity"
             android:exported="true"/>
-             <!-- Main Activity -->
+
+        <!-- Main Activity -->
         <activity
             android:name=".startUp.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <!-- Sign Up -->
         <activity
             android:name=".startUp.SignUp"
-            android:exported="true" /> <!-- Create Profile - Student -->
+            android:exported="true" />
+
+        <!-- Create Profile - Student -->
         <activity
             android:name=".startUp.StudentCreateProfile"
-            android:exported="true" /> <!-- Create Profile - Faculty -->
+            android:exported="true" />
+
+        <!-- Create Profile - Faculty -->
         <activity
             android:name=".startUp.FacultyCreateProfile"
             android:exported="true" />
+
         <activity
             android:name=".userFx.bookingConfirmation"
             android:exported="true" />
+
+        <activity
+            android:name=".userFx.EditProfileActivity"
+            android:exported="true" />
+
         <activity
             android:name=".userFx.BookingActivity"
             android:exported="true" />
-        <activity android:name=".TestBookingActivity" /> <!-- Preloaded fonts -->
+
+        <activity
+            android:name=".TestBookingActivity"
+            android:exported="true" />
+
+        <!-- Preloaded fonts -->
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
