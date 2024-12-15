@@ -1,61 +1,60 @@
 package com.example.myapplication.adminFx;
 
-import static com.example.myapplication.adminFx.AdminBookingAdapter.*;
-
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.adminFx.AdminBooking;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
-public class AdminBookingAdapter extends RecyclerView.Adapter<BookingViewHolder> {
+public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapter.ViewHolder> {
 
+    private List<AdminBooking> bookingList; // List of bookings
     private Context context;
-    private List<AdminBooking> bookingList;
-    private OnBookingActionListener listener;
+    private FirebaseFirestore db;
 
-    public interface OnBookingActionListener {
-        void onApproveClick(AdminBooking booking);
-
-        void onDenyClick(AdminBooking booking);
-    }
-
-    public AdminBookingAdapter(Context context, List<AdminBooking> bookingList, OnBookingActionListener listener) {
-        this.context = context;
+    public AdminBookingAdapter(List<AdminBooking> bookingList, Context context) {
         this.bookingList = bookingList;
-        this.listener = listener;
+        this.context = context;
+        this.db = FirebaseFirestore.getInstance();
     }
 
     @NonNull
     @Override
-    public BookingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_history, parent, false);
-        return new BookingViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate layout for individual booking items
+        View view = LayoutInflater.from(context).inflate(R.layout.booking_items, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BookingViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        // Get the current booking item
         AdminBooking booking = bookingList.get(position);
 
-        // Set booking data
-        holder.bookingDate.setText(booking.getBookingDate());
-        holder.bookingTime.setText(booking.getBookingTime());
-        holder.receivedDate.setText("Received: " + booking.getReceivedDate());
-        holder.bookingImage.setImageResource(booking.getImageResource());
+        // Bind the booking details to the UI
+        holder.textViewBookingId.setText("Booking ID: " + booking.getBookingId());
+        holder.textViewBookingDetails.setText("Details: " + booking.getBookingDetails());
 
-        // Handle button clicks
-        holder.approveButton.setOnClickListener(v -> listener.onApproveClick(booking));
-        holder.denyButton.setOnClickListener(v -> listener.onDenyClick(booking));
+        // View Details Button
+        holder.buttonViewDetails.setOnClickListener(v -> showBookingDetailsDialog(booking));
+
+        // Approve Booking Button
+        holder.buttonApprove.setOnClickListener(v -> approveBooking(booking.getBookingId(), position));
+
+        // Deny Booking Button
+        holder.buttonDeny.setOnClickListener(v -> denyBooking(booking.getBookingId(), position));
     }
 
     @Override
@@ -63,24 +62,56 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<BookingViewHolder>
         return bookingList.size();
     }
 
-    static class BookingViewHolder extends RecyclerView.ViewHolder {
+    // Show detailed booking info in a dialog
+    private void showBookingDetailsDialog(AdminBooking booking) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Booking Details")
+                .setMessage("Booking ID: " + booking.getBookingId() + "\n" +
+                        "Details: " + booking.getBookingDetails() + "\n" +
+                        "Booking Date: " + booking.getBookingDate() + "\n" +
+                        "Status: " + booking.getStatus())
+                .setPositiveButton("OK", null)
+                .show();
+    }
 
-        ImageView bookingImage;
-        TextView bookingDate, bookingTime, receivedDate, viewDetails;
-        Button approveButton, denyButton;
+    // Approve Booking by updating its status in Firestore
+    private void approveBooking(String bookingId, int position) {
+        db.collection("Bookings").document(bookingId)
+                .update("status", "approved")
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(context, "Booking approved successfully!", Toast.LENGTH_SHORT).show();
+                    notifyItemChanged(position); // Refresh the item in the list
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Error approving booking", Toast.LENGTH_SHORT).show();
+                });
+    }
 
-        public BookingViewHolder(@NonNull View itemView) {
+    // Deny Booking by updating its status in Firestore
+    private void denyBooking(String bookingId, int position) {
+        db.collection("Bookings").document(bookingId)
+                .update("status", "denied")
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(context, "Booking denied successfully!", Toast.LENGTH_SHORT).show();
+                    notifyItemChanged(position); // Refresh the item in the list
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Error denying booking", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView textViewBookingId, textViewBookingDetails;
+        Button buttonViewDetails, buttonApprove, buttonDeny;
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            bookingImage = itemView.findViewById(R.id.bookingImage);
-            bookingDate = itemView.findViewById(R.id.bookingDate);
-            bookingTime = itemView.findViewById(R.id.bookingTime);
-            receivedDate = itemView.findViewById(R.id.receivedDate);
-            viewDetails = itemView.findViewById(R.id.viewDetails);
-            approveButton = itemView.findViewById(R.id.buttonApprove);
-            denyButton = itemView.findViewById(R.id.buttonDeny);
+            // Initialize UI components
+            textViewBookingId = itemView.findViewById(R.id.textViewBookingId);
+            textViewBookingDetails = itemView.findViewById(R.id.textViewBookingDetails);
+            buttonViewDetails = itemView.findViewById(R.id.buttonViewDetails);
+            buttonApprove = itemView.findViewById(R.id.buttonApprove);
+            buttonDeny = itemView.findViewById(R.id.buttonDeny);
         }
     }
 }
-
-

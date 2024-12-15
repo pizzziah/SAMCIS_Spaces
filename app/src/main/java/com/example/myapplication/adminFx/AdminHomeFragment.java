@@ -1,114 +1,68 @@
 package com.example.myapplication.adminFx;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.userFx.bookingConfirmation;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminHomeFragment extends Fragment {
 
-    private static final String TAG = "AdminHomeFragment"; // For logging
-    private FirebaseFirestore db; // Firestore instance
+    private RecyclerView recyclerView;
+    private AdminBookingAdapter adminBookingAdapter;
+    private List<AdminBooking> bookingList;
+    private FirebaseFirestore db;
 
-    public AdminHomeFragment() {
-        // Default constructor required
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        db = FirebaseFirestore.getInstance(); // Initialize Firestore
-    }
-
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.a_fragment_home, container, false);
-        Log.d(TAG, "AdminHomeFragment View initialized");
+        View rootView = inflater.inflate(R.layout.a_fragment_home, container, false);
 
-        // Initialize buttons
-        Button pendingButton = view.findViewById(R.id.pendingBttn);
-        Button approvedButton = view.findViewById(R.id.approvedBttn);
-        Button approveButton = view.findViewById(R.id.buttonApprove);
-        Button denyButton = view.findViewById(R.id.buttonDeny);
+        // Initialize Firestore and RecyclerView
+        db = FirebaseFirestore.getInstance();
+        recyclerView = rootView.findViewById(R.id.recyclerViewBookings); // Updated ID
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Button click listeners
-        pendingButton.setOnClickListener(v -> fetchBookingDetails("pending_doc_id"));
-        approvedButton.setOnClickListener(v -> fetchBookingDetails("approved_doc_id"));
-        approveButton.setOnClickListener(v -> fetchBookingDetails("approve_doc_id"));
-        denyButton.setOnClickListener(v -> fetchBookingDetails("deny_doc_id"));
+        bookingList = new ArrayList<>();
+        adminBookingAdapter = new AdminBookingAdapter(bookingList, getContext());
+        recyclerView.setAdapter(adminBookingAdapter);
 
-        return view;
+        // Fetch bookings from Firestore
+        fetchBookings();
+
+        return rootView;
     }
 
-    /**
-     * Fetch booking details from Firestore based on document ID.
-     *
-     * @param venueId The document ID to fetch data from Firestore.
-     */
-    private void fetchBookingDetails(String venueId) {
-        Log.d(TAG, "Fetching Firestore document: " + venueId);
-
-        DocumentReference venueRef = db.collection("Bookings").document(venueId);
-        venueRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document != null && document.exists()) {
-                    Log.d(TAG, "Document data: " + document.getData());
-
-                    // Fetch fields
-                    Boolean venueAvailability = document.getBoolean("available");
-                    String venueFloor = document.getString("floor");
-                    String venueName = document.getString("name");
-
-                    if (venueName != null && venueFloor != null) {
-                        openBookingActivity(venueName, venueFloor, venueAvailability);
+    private void fetchBookings() {
+        db.collection("Bookings")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        bookingList.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            AdminBooking booking = document.toObject(AdminBooking.class);
+                            booking.setBookingId(document.getId()); // Store document ID for operations
+                            bookingList.add(booking);
+                        }
+                        adminBookingAdapter.notifyDataSetChanged();
                     } else {
-                        showToast("Venue details are incomplete");
-                        Log.w(TAG, "Missing fields in the document");
+                        Toast.makeText(getContext(), "Failed to fetch bookings", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    showToast("No venue details found");
-                    Log.w(TAG, "No document found for ID: " + venueId);
-                }
-            } else {
-                showToast("Error loading venue details");
-                Log.e(TAG, "Firestore error: ", task.getException());
-            }
-        });
-    }
-
-    /**
-     * Launch the BookingConfirmation activity with venue details.
-     */
-    private void openBookingActivity(String name, String floor, Boolean isAvailable) {
-        Intent intent = new Intent(getActivity(), bookingConfirmation.class);
-        intent.putExtra("VENUE_NAME", name);
-        intent.putExtra("VENUE_FLOOR", floor);
-        intent.putExtra("VENUE_AVAILABLE", isAvailable != null && isAvailable);
-        startActivity(intent);
-    }
-
-    /**
-     * Display a short Toast message.
-     */
-    private void showToast(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                });
     }
 }
