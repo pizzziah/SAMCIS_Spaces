@@ -23,10 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
-    EditText emailInput, nameInput, pwdInput, confirmPwd;
+    EditText emailInput, nameInput, pwdInput, confirmPwd, programInput, yearLevelInput, departmentInput;
     TextView adminApply;
     Button cancelBttn, saveBttn;
-
+    String userCategory;
     FirebaseAuth auth;
     FirebaseFirestore db;
 
@@ -46,12 +46,54 @@ public class EditProfileActivity extends AppCompatActivity {
         cancelBttn = findViewById(R.id.cancelBttn);
         saveBttn = findViewById(R.id.saveBttn);
 
-        cancelBttn.setOnClickListener(v -> {
-            finish();
-        });
+        // Add inputs for program, year level, and department
+        programInput = findViewById(R.id.editProgram);
+        yearLevelInput = findViewById(R.id.editYearLevel);
+        departmentInput = findViewById(R.id.editDepartment);
+
+        cancelBttn.setOnClickListener(v -> finish());
 
         saveBttn.setOnClickListener(v -> updateUserProfile());
         adminApply.setOnClickListener(v -> applyAsAdminPopup());
+
+        loadUserProfile();
+    }
+
+    private void loadUserProfile() {
+        FirebaseUser user = auth.getCurrentUser();
+
+        if (user != null) {
+            String userId = user.getUid();
+
+            db.collection("Users").document(userId).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String category = documentSnapshot.contains("Category") ? documentSnapshot.getString("Category") : "N/A";
+
+                            // Show or hide fields based on category
+                            if ("Student".equalsIgnoreCase(category)) {
+                                programInput.setVisibility(View.VISIBLE);
+                                yearLevelInput.setVisibility(View.VISIBLE);
+                                departmentInput.setVisibility(View.GONE);
+
+                                // Pre-fill the student fields
+                                programInput.setText(documentSnapshot.contains("Program") ? documentSnapshot.getString("Program") : "");
+                                yearLevelInput.setText(documentSnapshot.contains("Year Level") ? documentSnapshot.getString("Year Level") : "");
+
+                            } else if ("Faculty".equalsIgnoreCase(category)) {
+                                programInput.setVisibility(View.GONE);
+                                yearLevelInput.setVisibility(View.GONE);
+                                departmentInput.setVisibility(View.VISIBLE);
+
+                                // Pre-fill the faculty department field
+                                departmentInput.setText(documentSnapshot.contains("Department") ? documentSnapshot.getString("Department") : "");
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(EditProfileActivity.this, "Failed to load profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+        }
     }
 
     private void updateUserProfile() {
@@ -59,6 +101,9 @@ public class EditProfileActivity extends AppCompatActivity {
         String name = nameInput.getText().toString().trim();
         String pwd = pwdInput.getText().toString().trim();
         String confirmPass = confirmPwd.getText().toString().trim();
+        String program = programInput.getText().toString().trim();
+        String yearLevel = yearLevelInput.getText().toString().trim();
+        String department = departmentInput.getText().toString().trim();
 
         FirebaseUser user = auth.getCurrentUser();
 
@@ -79,6 +124,17 @@ public class EditProfileActivity extends AppCompatActivity {
             // Update Firestore
             Map<String, Object> updates = new HashMap<>();
             updates.put("FullName", name);
+
+            // Add Program, Year Level, or Department based on the category
+            FirebaseUser currentUser = auth.getCurrentUser();
+            String category = currentUser.getDisplayName(); // Assuming category is stored as displayName for simplicity
+
+            if ("Student".equalsIgnoreCase(category)) {
+                updates.put("Program", program);
+                updates.put("Year Level", yearLevel);
+            } else if ("Faculty".equalsIgnoreCase(category)) {
+                updates.put("Department", department);
+            }
 
             db.collection("Users").document(userId)
                     .update(updates)
