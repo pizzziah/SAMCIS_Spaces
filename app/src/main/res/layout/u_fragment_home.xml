@@ -1,189 +1,284 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".userFx.UserBookingFragment"
+    android:background="@drawable/bg_blue_gradient"
+    android:padding="16dp">
 
-    <!-- Top Background Section -->
-    <ImageView
-        android:id="@+id/bottomGradient"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:background="@color/blue"
-        android:clickable="false"/>
-
-    <ImageView
-        android:id="@+id/topBackground"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/logo_2"
-        android:clickable="false"/>
-
+    <!-- Heading -->
     <TextView
-        android:id="@+id/topText"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignTop="@id/topBackground"
-        android:layout_marginTop="93dp"
-        android:background="@drawable/ic_search"
-        android:backgroundTint="@color/black"
-        android:fontFamily="@font/poppins_medium"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:shadowColor="#80000000"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:shadowRadius="4"
-        android:text="December 12"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/subText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/topText"
-        android:layout_marginTop="6dp"
-        android:fontFamily="@font/poppins_medium"
-        android:text="School of Accountancy,\nManagement, Computing \nand Information Studies"
-        android:textColor="@android:color/white"
-        android:textSize="15sp"
-        android:paddingStart="12dp"
-        android:shadowColor="#80000000"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:shadowRadius="4"/>
+        android:text="Booking"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp" />
 
-    <!-- Search Bar in the middle -->
-    <TextView
-        android:id="@+id/tvHome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <!-- Bottom Row of Images -->
+    <!-- Search Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="397dp"
-        android:layout_marginBottom="276dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/bg_light_gray"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp">
 
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_search"
+            android:layout_gravity="center_vertical"
+            app:tint="#808080" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Search"
+            android:textColor="#000000"
+            android:textColorHint="#808080"
+            android:paddingStart="8dp"
+            android:background="@null"
+            android:inputType="text" />
+    </LinearLayout>
+
+    <!-- Scrollable Venue Cards -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_below="@id/subText"
             android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/button1"
-                android:layout_width="49dp"
-                android:layout_height="48dp"
-                android:layout_margin="45dp"
-                android:background="@null"
-                android:contentDescription="Book"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_booking" />
+            <!-- DEVESSE LOBBY -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                android:radius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Image -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/logo_2" />
+
+                    <!-- Details -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Devesse Lobby"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="6th Floor"
+                            android:textSize="14sp"
+                            android:textColor="#808080"
+                            android:layout_marginBottom="8dp" />
+
+                        <Button
+                            android:id="@+id/check_availability_button_devesse"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Check Availability"
+                            android:textAllCaps="false"
+                            android:backgroundTint="#FFA500"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- AMPHITHEATER -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                android:radius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Image -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/logo_2" />
+
+                    <!-- Details -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Amphitheater"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Open Space"
+                            android:textSize="14sp"
+                            android:textColor="#808080"
+                            android:layout_marginBottom="8dp" />
+
+                        <Button
+                            android:id="@+id/check_availability_button_amphi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Check Availability"
+                            android:textAllCaps="false"
+                            android:backgroundTint="#FFA500"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- DESMEDT OVAL -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                android:radius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Image -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/logo_2" />
+
+                    <!-- Details -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Desmedt Oval"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Open Space"
+                            android:textSize="14sp"
+                            android:textColor="#808080"
+                            android:layout_marginBottom="8dp" />
+
+                        <Button
+                            android:id="@+id/check_availability_button_oval"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Check Availability"
+                            android:textAllCaps="false"
+                            android:backgroundTint="#FFA500"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Venue Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                android:radius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Image -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/logo_2" />
+
+                    <!-- Details -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="iMac Laboratory"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4th Floor"
+                            android:textSize="14sp"
+                            android:textColor="#808080"
+                            android:layout_marginBottom="8dp" />
+
+                        <Button
+                            android:id="@+id/check_availability_button_lab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Check Availability"
+                            android:textAllCaps="false"
+                            android:backgroundTint="#FFA500"
+                            android:textColor="#FFFFFF"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
-
-        <!-- Button 2 and Text -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/button2"
-                android:layout_width="49dp"
-                android:layout_height="48dp"
-                android:layout_margin="45dp"
-                android:background="@null"
-                android:contentDescription="1"
-                android:src="@drawable/ic_chatbox" /> <!-- No background to avoid stretching -->
-
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="71dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <!-- Image 1 positioned near the left -->
-        <ImageView
-            android:id="@+id/image2"
-            android:layout_width="150dp"
-            android:layout_height="170dp"
-            android:layout_marginEnd="8dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="Basketball Court"
-            android:src="@drawable/logo_2"
-            android:clickable="true" />
-
-        <ImageView
-            android:id="@+id/image1"
-            android:layout_width="150dp"
-            android:layout_height="170dp"
-            android:layout_marginEnd="8dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="Ampitheater"
-            android:src="@drawable/logo_2"
-            android:clickable="true" />
-
-        <!-- Image 3 near the right -->
-        <ImageView
-            android:id="@+id/image3"
-            android:layout_width="150dp"
-            android:layout_height="170dp"
-            android:layout_marginEnd="8dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/logo_2"
-            android:contentDescription="1"
-            android:clickable="true"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="440dp"
-        android:layout_marginBottom="272dp"
-        android:gravity="center"
-        android:orientation="horizontal"> <!-- Margin added for some gap from the buttons -->
-
-        <!-- Text 1 -->
-        <TextView
-            android:id="@+id/text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="100dp"
-            android:text="Book"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" /> <!-- Gap between Text 1 and Text 2 -->
-
-        <!-- Text 2 -->
-        <TextView
-            android:id="@+id/text2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            android:text="Clock"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" /> <!-- Gap between Text 2 and Text 3 -->
-    </LinearLayout>
-</RelativeLayout>
+    </ScrollView>
+</LinearLayout>

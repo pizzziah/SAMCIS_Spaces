@@ -1,284 +1,75 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    tools:context=".userFx.UserBookingFragment"
-    android:background="@drawable/bg_blue_gradient"
-    android:padding="16dp">
+    android:background="@drawable/bg_yellow_gradient"
+    tools:context="com.example.myapplication.userFx.UserBookingFragment">
 
-    <!-- Heading -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Booking"
-        android:textSize="40dp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Search Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_light_gray"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp">
+        android:orientation="vertical"
+        android:padding="20dp">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_search"
-            android:layout_gravity="center_vertical"
-            app:tint="#808080" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Search"
-            android:textColor="#000000"
-            android:textColorHint="#808080"
-            android:paddingStart="8dp"
-            android:background="@null"
-            android:inputType="text" />
-    </LinearLayout>
-
-    <!-- Scrollable Venue Cards -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        <!-- Page Title -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-            <!-- DEVESSE LOBBY -->
-            <androidx.cardview.widget.CardView
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bookings"
+                android:textSize="50dp"
+                android:textColor="#FFFF"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Booking Sections -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:background="@color/blue"
+            android:padding="20dp">
+
+            <!-- Scheduled Today -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current Bookings"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:layout_marginTop="8dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerToday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardElevation="4dp"
-                android:radius="8dp">
+                android:layout_marginTop="8dp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            <!-- Past Bookings -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Past Bookings"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="16dp" />
 
-                    <!-- Image -->
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="160dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/logo_2" />
-
-                    <!-- Details -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Devesse Lobby"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#000000" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="6th Floor"
-                            android:textSize="14sp"
-                            android:textColor="#808080"
-                            android:layout_marginBottom="8dp" />
-
-                        <Button
-                            android:id="@+id/check_availability_button_devesse"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Check Availability"
-                            android:textAllCaps="false"
-                            android:backgroundTint="#FFA500"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- AMPHITHEATER -->
-            <androidx.cardview.widget.CardView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerPast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardElevation="4dp"
-                android:radius="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!-- Image -->
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="160dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/logo_2" />
-
-                    <!-- Details -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Amphitheater"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#000000" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Open Space"
-                            android:textSize="14sp"
-                            android:textColor="#808080"
-                            android:layout_marginBottom="8dp" />
-
-                        <Button
-                            android:id="@+id/check_availability_button_amphi"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Check Availability"
-                            android:textAllCaps="false"
-                            android:backgroundTint="#FFA500"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- DESMEDT OVAL -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardElevation="4dp"
-                android:radius="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!-- Image -->
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="160dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/logo_2" />
-
-                    <!-- Details -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Desmedt Oval"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#000000" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Open Space"
-                            android:textSize="14sp"
-                            android:textColor="#808080"
-                            android:layout_marginBottom="8dp" />
-
-                        <Button
-                            android:id="@+id/check_availability_button_oval"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Check Availability"
-                            android:textAllCaps="false"
-                            android:backgroundTint="#FFA500"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Venue Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardElevation="4dp"
-                android:radius="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!-- Image -->
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="160dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/logo_2" />
-
-                    <!-- Details -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="iMac Laboratory"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="#000000" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="4th Floor"
-                            android:textSize="14sp"
-                            android:textColor="#808080"
-                            android:layout_marginBottom="8dp" />
-
-                        <Button
-                            android:id="@+id/check_availability_button_lab"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Check Availability"
-                            android:textAllCaps="false"
-                            android:backgroundTint="#FFA500"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>
