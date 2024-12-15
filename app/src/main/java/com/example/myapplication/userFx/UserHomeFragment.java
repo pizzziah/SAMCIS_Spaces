@@ -27,7 +27,6 @@ public class UserHomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Initialize Firestore
         db = FirebaseFirestore.getInstance();
     }
 

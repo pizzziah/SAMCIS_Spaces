@@ -58,7 +58,7 @@ public class UserBookingFragment extends Fragment {
     }
 
     private void fetchBookings() {
-        db.collection("bookings")
+        db.collection("Users")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     todayList.clear();

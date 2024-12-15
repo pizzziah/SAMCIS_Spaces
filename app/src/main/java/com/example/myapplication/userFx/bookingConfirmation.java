@@ -13,8 +13,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentReference;
 
 import java.util.Calendar;
 
@@ -22,6 +23,7 @@ public class bookingConfirmation extends AppCompatActivity {
 
     private Button bookNowButton;
     private FirebaseFirestore db;
+    private FirebaseAuth auth;
     private Dialog popupDialog;
     private TextView venueNameTextView, venueFloorTextView, venueAvailabilityTextView, bookingDateTextView;
     private String selectedDate = "";
@@ -31,13 +33,14 @@ public class bookingConfirmation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking_confirmation);
 
+        // Initialize Firebase
         db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         // Get the venue details passed from the previous activity (UserBookingFragment)
         Intent intent = getIntent();
         String venueName = intent.getStringExtra("venueName");
         String venueFloor = intent.getStringExtra("venueFloor");
-        String venueImageUrl = intent.getStringExtra("venueImageUrl");
         Boolean venueAvailability = intent.getBooleanExtra("venueAvailability", false);
 
         // Initialize UI elements
@@ -56,7 +59,7 @@ public class bookingConfirmation extends AppCompatActivity {
         bookingDateTextView.setOnClickListener(view -> showDatePickerDialog());
 
         // Handle Book Now button click
-        bookNowButton.setOnClickListener(view -> showBookingPopup(venueName));
+        bookNowButton.setOnClickListener(view -> saveBookingData(venueName));
     }
 
     // Method to show the calendar dialog for date selection
@@ -74,48 +77,41 @@ public class bookingConfirmation extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    // Method to show the booking confirmation popup
-    private void showBookingPopup(String venueId) {
-        popupDialog = new Dialog(this);
-        popupDialog.setContentView(R.layout.popup_booking_confirmation);
-        popupDialog.setCancelable(false); // Prevent dialog dismissal on outside touch
 
-        TextView popupVenueName = popupDialog.findViewById(R.id.popupVenueName);
-        TextView popupBookingDate = popupDialog.findViewById(R.id.popupBookingDate);
-        TextView popupAvailability = popupDialog.findViewById(R.id.popupBookingAvailability); // Updated to show availability
-        Button confirmButton = popupDialog.findViewById(R.id.confirmButton);
+    // Method to save the booking data to Firestore
+    private void saveBookingData(String venueName) {
+        // Check if a date is selected
+        if (selectedDate.isEmpty()) {
+            Toast.makeText(this, "Please select a date before confirming the booking!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        popupVenueName.setText("Venue: " + venueId);
-        popupBookingDate.setText("Date: " + (selectedDate.isEmpty() ? "Not selected" : selectedDate));
+        // Get the current user ID from Firebase Authentication
+        String userId = auth.getCurrentUser().getUid();
 
-        // Fetch venue details from Firestore
-        DocumentReference venueRef = db.collection("venues").document(venueId);
-        venueRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                String venueName = documentSnapshot.getString("name");
-                String floor = documentSnapshot.getString("floor");
-                Boolean available = documentSnapshot.getBoolean("available");
+        // Get venue name (for example, from Intent or UI)
+        String venueName1 = venueName;
 
-                popupVenueName.setText("Venue: " + venueName);
-                popupBookingDate.setText("Floor: " + floor);
+        // Create a reference to the bookings collection of the current user in Firestore
+        DocumentReference bookingRef = db.collection("Users")
+                .document(userId) // Access the user's document by UID
+                .collection("bookings") // Access the bookings collection
+                .document(); // Automatically generate a new document ID for each booking
 
-                // Update the availability instead of the time
-                popupAvailability.setText("Availability: " + (available != null && available ? "Available" : "Not Available"));
-            } else {
-                Toast.makeText(this, "Venue data not found!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Create a new Booking object with the user ID, venue name, and selected date
+        Booking booking = new Booking(userId, venueName1, selectedDate);
 
-        confirmButton.setOnClickListener(view -> {
-            if (selectedDate.isEmpty()) {
-                Toast.makeText(this, "Please select a date before confirming the booking!", Toast.LENGTH_SHORT).show();
-            } else {
-                // Confirm the booking
-                Toast.makeText(this, "Booking Confirmed for " + selectedDate, Toast.LENGTH_SHORT).show();
-                popupDialog.dismiss();
-            }
-        });
-
-        popupDialog.show();
+        // Save the selected date to Firestore
+        bookingRef.set(booking)
+                .addOnSuccessListener(aVoid -> {
+                    // Successfully saved booking
+                    Toast.makeText(this, "Booking confirmed for " + selectedDate, Toast.LENGTH_SHORT).show();
+                    finish(); // Close the activity after booking is confirmed
+                })
+                .addOnFailureListener(e -> {
+                    // Failed to save booking
+                    Toast.makeText(this, "Failed to save booking: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
+
 }
