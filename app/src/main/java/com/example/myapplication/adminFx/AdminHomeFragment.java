@@ -49,7 +49,7 @@ public class AdminHomeFragment extends Fragment {
     }
 
     private void fetchBookings() {
-        db.collection("Bookings")
+        db.collection("Users.bookings")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

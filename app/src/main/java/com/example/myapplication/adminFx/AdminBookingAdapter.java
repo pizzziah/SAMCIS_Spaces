@@ -76,8 +76,8 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
 
     // Approve Booking by updating its status in Firestore
     private void approveBooking(String bookingId, int position) {
-        db.collection("Bookings").document(bookingId)
-                .update("status", "approved")
+        db.collection("Users.booking").document(bookingId)
+                .update("status", "true")
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(context, "Booking approved successfully!", Toast.LENGTH_SHORT).show();
                     notifyItemChanged(position); // Refresh the item in the list
@@ -89,8 +89,8 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
 
     // Deny Booking by updating its status in Firestore
     private void denyBooking(String bookingId, int position) {
-        db.collection("Bookings").document(bookingId)
-                .update("status", "denied")
+        db.collection("Users.bookings").document(bookingId)
+                .update("status", "false")
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(context, "Booking denied successfully!", Toast.LENGTH_SHORT).show();
                     notifyItemChanged(position); // Refresh the item in the list
