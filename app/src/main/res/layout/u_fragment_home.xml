@@ -73,7 +73,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/logo_2" />
+                        android:src="@drawable/devesse" />
 
                     <!-- Details -->
                     <LinearLayout
@@ -129,7 +129,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/logo_2" />
+                        android:src="@drawable/amphitheater" />
 
                     <!-- Details -->
                     <LinearLayout
@@ -185,7 +185,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/logo_2" />
+                        android:src="@drawable/oval" />
 
                     <!-- Details -->
                     <LinearLayout
@@ -241,7 +241,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/logo_2" />
+                        android:src="@drawable/comlab" />
 
                     <!-- Details -->
                     <LinearLayout
