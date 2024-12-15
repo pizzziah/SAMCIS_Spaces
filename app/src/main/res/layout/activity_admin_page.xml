@@ -39,6 +39,13 @@
             android:background="@color/blue"
             android:padding="15dp">
 
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back_bttn"
+                android:background="?android:attr/selectableItemBackground" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,7 +53,7 @@
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:textSize="18sp"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="10dp" />
 
             <!-- RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView

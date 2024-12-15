@@ -1,7 +1,7 @@
 package com.example.myapplication.main;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.myapplication.adminFx.AdminBookingFragment;
 import com.example.myapplication.adminFx.AdminHomeFragment;
+import com.example.myapplication.adminFx.AdminPageActivity;
 import com.example.myapplication.adminFx.AdminProfileFragment;
 import com.example.myapplication.databinding.ActivityMainBinding;
 import com.example.myapplication.userFx.UserBookingFragment;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         userRole = getIntent().getStringExtra("UserRole");
 
+        // Check the role and display the appropriate home fragment
         if ("Admin".equals(userRole)) {
             replaceFragment(new AdminHomeFragment());
         }
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
             replaceFragment(new UserHomeFragment());
         }
 
+        // Setup the bottom navigation listener
         binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -48,14 +51,17 @@ public class MainActivity extends AppCompatActivity {
                     if (menuItemId == R.id.home) {
                         replaceFragment(new AdminHomeFragment());
                     } else if (menuItemId == R.id.booking) {
-                        replaceFragment(new AdminBookingFragment());
+                        // Open AdminPageActivity when the booking button is clicked for Admin role
+                        Intent intent = new Intent(MainActivity.this, AdminPageActivity.class);
+                        startActivity(intent);
+                        return true;  // Returning true to indicate the action was handled
                     } else if (menuItemId == R.id.profile) {
                         replaceFragment(new AdminProfileFragment());
                     }
                     return true;
                 }
 
-                if ("Admin".equals(userRole)) {
+                if ("User".equals(userRole)) {
                     if (menuItemId == R.id.home) {
                         replaceFragment(new UserHomeFragment());
                     } else if (menuItemId == R.id.booking) {
@@ -65,11 +71,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return true;
                 }
+
                 return false;
             }
         });
     }
 
+    // Method to replace fragments in the container
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -77,4 +85,3 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 }
-
