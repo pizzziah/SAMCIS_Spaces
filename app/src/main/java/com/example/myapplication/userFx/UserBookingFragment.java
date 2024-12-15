@@ -1,5 +1,6 @@
 package com.example.myapplication.userFx;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ public class UserBookingFragment extends Fragment {
     private List<Booking> pastList = new ArrayList<>();
     private FirebaseFirestore db;
 
+    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
