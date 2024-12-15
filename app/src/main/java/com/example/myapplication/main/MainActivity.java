@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int menuItemId = item.getItemId();
 
-                // Navigation based on item selected
                 if (menuItemId == R.id.home) {
                     replaceFragment(new UserHomeFragment());
                 } else if (menuItemId == R.id.booking) {
@@ -46,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Replace the current fragment with the selected fragment
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();

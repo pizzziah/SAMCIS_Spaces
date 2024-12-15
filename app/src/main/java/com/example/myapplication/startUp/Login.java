@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Login extends AppCompatActivity {
     private EditText email, password;
@@ -33,7 +34,7 @@ public class Login extends AppCompatActivity {
     private boolean isPasswordVisible = false;
 
     private FirebaseAuth fAuth;
-    private DatabaseReference dbRef;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class Login extends AppCompatActivity {
 
         // Initialize Firebase
         fAuth = FirebaseAuth.getInstance();
-        dbRef = FirebaseDatabase.getInstance().getReference("Users");
+        db = FirebaseFirestore.getInstance();
 
         // Initialize views
         email = findViewById(R.id.email);
@@ -107,29 +108,34 @@ public class Login extends AppCompatActivity {
     }
 
     private void fetchUserDetails(String userId) {
-        dbRef.child(userId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult().exists()) {
-                DataSnapshot snapshot = task.getResult();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                // Log fetched data
-                String userRole = snapshot.child("UserRole").getValue(String.class);
-                if (userRole != null) {
-                    userRole = userRole.trim(); // Trim leading/trailing spaces
-                    android.util.Log.d("USER_ROLE", "Fetched role: " + userRole);
-                }
+        db.collection("Users").document(userId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult().exists()) {
+                        // Retrieve user data from Firestore
+                        String userRole = task.getResult().getString("UserRole");
 
-                if ("User".equalsIgnoreCase(userRole)) {
-                    Intent intent = new Intent(Login.this, MainActivity.class);
-                    intent.putExtra("fragment", UserHomeFragment.class.getName());
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(Login.this, "Invalid user role. Role: " + userRole, Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(Login.this, "User data not found in database.", Toast.LENGTH_SHORT).show();
-            }
-        });
+                        if (userRole != null) {
+                            userRole = userRole.trim();
+                            android.util.Log.d("USER_ROLE", "Fetched role: " + userRole);
+
+                            if ("User".equalsIgnoreCase(userRole)) {
+                                Intent intent = new Intent(Login.this, MainActivity.class);
+                                intent.putExtra("fragment", UserHomeFragment.class.getName());
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(Login.this, "Invalid user role. Role: " + userRole, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(Login.this, "User data not found in Firestore.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(Login.this, "Failed to fetch user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
 }

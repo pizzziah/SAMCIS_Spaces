@@ -97,6 +97,7 @@ public class SignUp extends AppCompatActivity {
         String userPassword = password.getText().toString();
         String confirmPwd = confirmPassword.getText().toString();
 
+        // Validation
         if (!isValidEmail(userEmail)) {
             email.setError("Invalid email format.");
             return;
@@ -107,65 +108,56 @@ public class SignUp extends AppCompatActivity {
             return;
         }
 
-        if (!termsCheckBox.isChecked()) {
-            Toast.makeText(SignUp.this, "Please accept Terms and Conditions", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (userEmail.isEmpty() || userName.isEmpty() || userPassword.isEmpty() || confirmPwd.isEmpty()) {
-            Toast.makeText(SignUp.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         if (!userPassword.equals(confirmPwd)) {
             confirmPassword.setError("Passwords do not match");
             return;
         }
 
-        if (selectedCategory.equals("Choose Category") || selectedCategory.isEmpty()) {
-            Toast.makeText(SignUp.this, "Please select a category", Toast.LENGTH_SHORT).show();
+        if (!termsCheckBox.isChecked()) {
+            Toast.makeText(this, "Please accept Terms and Conditions", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        if (selectedCategory.isEmpty() || selectedCategory.equalsIgnoreCase("Choose Category")) {
+            Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Create user with Firebase Authentication
         fAuth.createUserWithEmailAndPassword(userEmail, userPassword)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        FirebaseUser user = fAuth.getCurrentUser();
-
-                        if (user != null) {
-                            String userId = user.getUid();
-
-                            DocumentReference userRef = db.collection("Users").document(userId);
-                            Map<String, Object> userInfo = new HashMap<>();
-                            userInfo.put("UserEmail", userEmail);
-                            userInfo.put("FullName", userName);
-                            userInfo.put("Category", selectedCategory);
-                            userInfo.put("UserRole", "User");
-
-                            userRef.set(userInfo)
-                                    .addOnSuccessListener(aVoid -> {
-                                        Toast.makeText(SignUp.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
-                                        if (selectedCategory.equalsIgnoreCase("Student")) {
-                                            Intent intent = new Intent(SignUp.this, StudentCreateProfile.class);
-                                            intent.putExtra("USER_ID", userId);
-                                            startActivity(intent);
-                                        } else {
-                                            Intent intent = new Intent(SignUp.this, FacultyCreateProfile.class);
-                                            intent.putExtra("USER_ID", userId);
-                                            startActivity(intent);
-                                        }
-                                        finish();
-                                    })
-                                    .addOnFailureListener(e ->
-                                            Toast.makeText(SignUp.this, "Error saving data: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(SignUp.this, "Failed to create account: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                .addOnSuccessListener(authResult -> saveUserDataToFirestore(authResult.getUser(), userName, userEmail))
+                .addOnFailureListener(e -> Toast.makeText(SignUp.this, "Failed to create account: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
+
+    private void saveUserDataToFirestore(FirebaseUser user, String userName, String userEmail) {
+        if (user == null) return;
+
+        String userId = user.getUid();
+
+        // Prepare user data to save in Firestore
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("UserEmail", userEmail);
+        userInfo.put("FullName", userName);
+        userInfo.put("Category", selectedCategory);
+        userInfo.put("UserRole", "User");
+
+        // Save to Firestore
+        db.collection("Users").document(userId).set(userInfo)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(SignUp.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
+
+                    // Redirect based on category
+                    Class<?> targetActivity = selectedCategory.equalsIgnoreCase("Student") ?
+                            StudentCreateProfile.class : FacultyCreateProfile.class;
+
+                    Intent intent = new Intent(SignUp.this, targetActivity);
+                    intent.putExtra("USER_ID", userId);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> Toast.makeText(SignUp.this, "Error saving data: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
 
     private boolean isValidEmail(String email) {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
