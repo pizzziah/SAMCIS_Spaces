@@ -35,11 +35,11 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        // Initialize Firebase instances
+        userCategory = getIntent().getStringExtra("UserCategory");
+
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Initialize UI components
         emailInput = findViewById(R.id.editEmail);
         nameInput = findViewById(R.id.editName);
         pwdInput = findViewById(R.id.editPassword);
@@ -48,7 +48,6 @@ public class EditProfileActivity extends AppCompatActivity {
         cancelBttn = findViewById(R.id.cancelBttn);
         saveBttn = findViewById(R.id.saveBttn);
 
-        // New EditTexts for additional fields
         departmentInput = findViewById(R.id.editDepartment);
         yearLevelInput = findViewById(R.id.editYearLevel);
         programInput = findViewById(R.id.editProgram);
@@ -57,20 +56,31 @@ public class EditProfileActivity extends AppCompatActivity {
 
         updateFieldVisibility();
 
-        cancelBttn.setOnClickListener(v -> finish());
+        cancelBttn.setOnClickListener(v -> {
+            startActivity(new Intent(EditProfileActivity.this, UserProfileFragment.class));
+            finish();
+        });
+
         saveBttn.setOnClickListener(v -> updateUserProfile());
-        adminApply.setOnClickListener(v -> applyAsAdminPopup());
+
+        adminApply.setOnClickListener(v -> {
+            startActivity(new Intent(EditProfileActivity.this, AdminApplication.class));
+            finish();
+        });
     }
 
     private void updateFieldVisibility() {
+        departmentInput.setVisibility(View.GONE);
+        yearLevelInput.setVisibility(View.GONE);
+        programInput.setVisibility(View.GONE);
+
         if ("Faculty".equalsIgnoreCase(userCategory)) {
             departmentInput.setVisibility(View.VISIBLE);
-            yearLevelInput.setVisibility(View.GONE);
-            programInput.setVisibility(View.GONE);
         } else if ("Student".equalsIgnoreCase(userCategory)) {
             yearLevelInput.setVisibility(View.VISIBLE);
             programInput.setVisibility(View.VISIBLE);
-            departmentInput.setVisibility(View.GONE);
+        } else {
+            Toast.makeText(this, "User category is undefined!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -87,84 +97,51 @@ public class EditProfileActivity extends AppCompatActivity {
         if (user != null) {
             String userId = user.getUid();
 
-            // Validate input
-            if (TextUtils.isEmpty(name)) {
-                nameInput.setError("Name cannot be empty");
-                return;
-            }
-
-            if (!TextUtils.isEmpty(pwd) && !pwd.equals(confirmPass)) {
-                confirmPwd.setError("Passwords do not match");
-                return;
-            }
-
-            // Prepare updates
             Map<String, Object> updates = new HashMap<>();
-            updates.put("FullName", name);
 
-            if ("Faculty".equalsIgnoreCase(userCategory)) {
+            if (!TextUtils.isEmpty(name)) {
+                updates.put("FullName", name);
+            }
+            if ("Faculty".equalsIgnoreCase(userCategory) && !TextUtils.isEmpty(department)) {
                 updates.put("Department", department);
-            } else if ("Student".equalsIgnoreCase(userCategory)) {
-                updates.put("YearLevel", yearLevel);
-                updates.put("Program", program);
+            }
+            if ("Student".equalsIgnoreCase(userCategory)) {
+                if (!TextUtils.isEmpty(yearLevel)) {
+                    updates.put("YearLevel", yearLevel);
+                }
+                if (!TextUtils.isEmpty(program)) {
+                    updates.put("Program", program);
+                }
             }
 
-            // Update Firestore
             db.collection("Users").document(userId)
                     .update(updates)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(EditProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
 
-                        // Update email if changed
                         if (!TextUtils.isEmpty(email)) {
                             user.updateEmail(email)
                                     .addOnSuccessListener(a -> Toast.makeText(this, "Email updated", Toast.LENGTH_SHORT).show())
                                     .addOnFailureListener(e -> Toast.makeText(this, "Email update failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
                         }
 
-                        // Update password if changed
                         if (!TextUtils.isEmpty(pwd)) {
-                            user.updatePassword(pwd)
-                                    .addOnSuccessListener(a -> Toast.makeText(this, "Password updated", Toast.LENGTH_SHORT).show())
-                                    .addOnFailureListener(e -> Toast.makeText(this, "Password update failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                            if (pwd.equals(confirmPass)) {
+                                user.updatePassword(pwd)
+                                        .addOnSuccessListener(a -> Toast.makeText(this, "Password updated", Toast.LENGTH_SHORT).show())
+                                        .addOnFailureListener(e -> Toast.makeText(this, "Password update failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                            } else {
+                                confirmPwd.setError("Passwords do not match");
+                                return;
+                            }
                         }
 
-                        // Navigate back to profile
                         Intent intent = new Intent(EditProfileActivity.this, UserProfileFragment.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(EditProfileActivity.this, "Failed to update profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    });
+                    .addOnFailureListener(e -> Toast.makeText(EditProfileActivity.this, "Failed to update profile: " + e.getMessage(), Toast.LENGTH_LONG).show());
         }
-    }
-
-    private void applyAsAdminPopup() {
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Apply as Admin")
-                .setMessage("Are you sure you want to apply as an admin? This will send a request for approval.")
-                .setPositiveButton("Apply", (dialog, which) -> {
-                    FirebaseUser user = auth.getCurrentUser();
-                    if (user != null) {
-                        String userId = user.getUid();
-
-                        Map<String, Object> adminRequest = new HashMap<>();
-                        adminRequest.put("adminRequest", true);
-
-                        db.collection("Users").document(userId)
-                                .update(adminRequest)
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(EditProfileActivity.this, "Admin request sent successfully!", Toast.LENGTH_SHORT).show();
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(EditProfileActivity.this, "Failed to send admin request: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                });
-                    }
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                .create()
-                .show();
     }
 }

@@ -46,7 +46,6 @@ public class StudentCreateProfile extends AppCompatActivity {
         cancelBttn = findViewById(R.id.cancelBttn);
         saveBttn = findViewById(R.id.saveBttn);
 
-        // Populate Spinner with Programs
         String[] programs = {
                 "Choose Program",
                 "BS in Accountancy",
@@ -66,7 +65,6 @@ public class StudentCreateProfile extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         programSpinner.setAdapter(adapter);
 
-        // Cancel Button Action
         cancelBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +74,6 @@ public class StudentCreateProfile extends AppCompatActivity {
             }
         });
 
-        // Save Button Action
         saveBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,14 +97,12 @@ public class StudentCreateProfile extends AppCompatActivity {
     private void saveStudentProfile(String idNumber, String yearLevel, String program) {
         DocumentReference userRef = db.collection("Users").document(userId);
 
-        // Prepare data to save in Firestore
         Map<String, Object> studentProfile = new HashMap<>();
         studentProfile.put("ID Number", idNumber);
         studentProfile.put("Year Level", yearLevel);
         studentProfile.put("Program", program);
         studentProfile.put("ProfileComplete", true);
 
-        // Update Firestore document
         userRef.update(studentProfile)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
