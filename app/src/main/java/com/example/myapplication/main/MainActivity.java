@@ -1,7 +1,7 @@
 package com.example.myapplication.main;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
@@ -9,9 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.myapplication.adminFx.AdminBookingFragment;
+import com.example.myapplication.adminFx.AdminUsersFragment;
 import com.example.myapplication.adminFx.AdminHomeFragment;
-import com.example.myapplication.adminFx.AdminPageActivity;
 import com.example.myapplication.adminFx.AdminProfileFragment;
 import com.example.myapplication.databinding.ActivityMainBinding;
 import com.example.myapplication.userFx.UserBookingFragment;
@@ -32,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
         userRole = getIntent().getStringExtra("UserRole");
 
-        // Check the role and display the appropriate home fragment
         if ("Admin".equals(userRole)) {
             replaceFragment(new AdminHomeFragment());
         }
@@ -50,11 +48,8 @@ public class MainActivity extends AppCompatActivity {
                 if ("Admin".equals(userRole)) {
                     if (menuItemId == R.id.home) {
                         replaceFragment(new AdminHomeFragment());
-                    } else if (menuItemId == R.id.booking) {
-                        // Open AdminPageActivity when the booking button is clicked for Admin role
-                        Intent intent = new Intent(MainActivity.this, AdminPageActivity.class);
-                        startActivity(intent);
-                        return true;  // Returning true to indicate the action was handled
+                    } else if (menuItemId == R.id.users) {
+                        replaceFragment(new AdminUsersFragment());
                     } else if (menuItemId == R.id.profile) {
                         replaceFragment(new AdminProfileFragment());
                     }
