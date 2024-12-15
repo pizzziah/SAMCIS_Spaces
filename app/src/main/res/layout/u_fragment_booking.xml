@@ -38,38 +38,11 @@
             android:background="@color/blue"
             android:padding="20dp">
 
-            <!-- Scheduled Today -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Current Bookings"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:layout_marginTop="8dp" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerToday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp" />
-
-            <!-- Past Bookings -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Past Bookings"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginTop="16dp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerPast"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp" />
-
+                android:layout_marginTop="8dp"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
