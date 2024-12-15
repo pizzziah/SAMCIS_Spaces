@@ -39,6 +39,7 @@ public class AdminHomeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         recyclerView = rootView.findViewById(R.id.recyclerViewBookings); // Updated ID
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setNestedScrollingEnabled(false);
 
         bookingList = new ArrayList<>();
         adminBookingAdapter = new AdminBookingAdapter(bookingList, getContext());

@@ -1,65 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".adminFx.AdminBookingAdapter"
-    android:padding="50dp"
-    android:background="#E2E8F7"
-    android:layout_marginBottom="8dp">
-
-    <!-- Booking ID Text -->
-    <TextView
-        android:id="@+id/textViewName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Booking Name"
-        android:textSize="40sp"
-        android:paddingBottom="8dp"
-        android:textStyle="bold"
-        android:fontFamily="@font/montserrat_bold"
-        android:textColor="@color/blue" />
-
-    <!-- Booking Date Text -->
-    <TextView
-        android:id="@+id/textViewBookingDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Date: November 16"
-        android:textSize="18sp"
-        android:fontFamily="@font/poppins_medium"
-        android:textColor="@android:color/black"
-        android:paddingBottom="4dp" />
-
-    <!-- Booking Status Text -->
-    <TextView
-        android:id="@+id/textViewStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Status: Pending"
-        android:textSize="18sp"
-        android:fontFamily="@font/poppins_medium"
-        android:textColor="@android:color/black"
-        android:paddingBottom="12dp" />
-
-    <!-- Booking Details Text -->
-    <TextView
-        android:id="@+id/textViewBookingDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Details: Event at XYZ location."
-        android:textSize="18sp"
-        android:fontFamily="@font/poppins_medium"
-        android:paddingBottom="12dp"
-        android:textColor="@android:color/black" />
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="8dp">
+        android:padding="16dp"
+        android:background="#E2E8F7"
+        android:layout_marginBottom="8dp">
 
+        <!-- Booking ID Text -->
+        <TextView
+            android:id="@+id/textViewBookingId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Booking ID: 12345"
+            android:textSize="18sp"
+            android:paddingBottom="8dp"
+            android:textStyle="bold"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/blue" />
+
+        <!-- Booking Date Text -->
+        <TextView
+            android:id="@+id/textViewBookingDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date: November 16"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_medium"
+            android:textColor="@android:color/black"
+            android:paddingBottom="4dp" />
+
+        <!-- Booking Status Text -->
+        <TextView
+            android:id="@+id/textViewStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status: Pending"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_medium"
+            android:textColor="@android:color/black"
+            android:paddingBottom="12dp" />
+
+        <!-- Booking Details Text -->
+        <TextView
+            android:id="@+id/textViewBookingDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Details: Event at XYZ location."
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_medium"
+            android:paddingBottom="12dp"
+            android:textColor="@android:color/black" />
+
+        <!-- View Details Button -->
         <Button
             android:id="@+id/buttonViewDetails"
             android:layout_width="wrap_content"
@@ -68,17 +66,18 @@
             android:backgroundTint="@color/shadow"
             android:textColor="@android:color/white"
             android:layout_gravity="center"
-            android:textAlignment="center"
             android:paddingHorizontal="16dp"
             android:fontFamily="@font/montserrat_bold"
-            android:layout_marginBottom="15dp"
-            android:paddingVertical="8dp" />
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="15dp" />
 
+        <!-- Divider -->
         <View
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@android:color/black"/>
+            android:background="@android:color/black" />
 
+        <!-- Approve/Deny Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -108,10 +107,10 @@
                 android:text="Approve"
                 android:backgroundTint="@color/yellow"
                 android:textColor="@android:color/white"
-                android:layout_marginEnd="8dp"
                 android:paddingHorizontal="16dp"
                 android:fontFamily="@font/montserrat_bold"
                 android:paddingVertical="8dp" />
         </LinearLayout>
+
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

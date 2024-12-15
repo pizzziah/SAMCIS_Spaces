@@ -2,6 +2,7 @@ package com.example.myapplication.adminFx;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
         AdminBooking booking = bookingList.get(position);
 
         // Bind the booking details to the UI
-        holder.textViewName.setText("Booking ID: " + booking.getUser());
+        holder.textViewBookingId.setText("Booking ID: " + booking.getBookingId());
         holder.textViewBookingDetails.setText("Details: " + booking.getBookingDetails());
 
         // View Details Button
@@ -76,42 +78,73 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
 
     // Approve Booking by updating its status in Firestore
     private void approveBooking(String bookingId, int position) {
-        // Correct Firestore path
-        String userId = "UserID";  // Replace with actual user ID
-        db.collection("Users").document(userId).collection("bookings").document(bookingId)
-                .update("status", "true")
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(context, "Booking approved successfully!", Toast.LENGTH_SHORT).show();
-                    notifyItemChanged(position); // Refresh the item in the list
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(context, "Error approving booking", Toast.LENGTH_SHORT).show();
+        // Reference to the Users collection
+        db.collection("Users")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot userDoc : task.getResult()) {
+                            // Reference the bookings subcollection for each user
+                            userDoc.getReference()
+                                    .collection("bookings")
+                                    .document(bookingId) // Use the specific booking ID you want to update
+                                    .update("status", "true")
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(context, "Booking approved successfully!", Toast.LENGTH_SHORT).show();
+                                        Log.d("UpdateBooking", "Updated booking ID: " + bookingId + " for user: " + userDoc.getId());
+                                        notifyItemChanged(position); // Refresh the item in the list
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("UpdateBooking", "Error updating booking ID: " + bookingId + " for user: " + userDoc.getId(), e);
+                                        Toast.makeText(context, "Error approving booking", Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    } else {
+                        Log.e("FirestoreError", "Error fetching users", task.getException());
+                        Toast.makeText(context, "Error fetching users", Toast.LENGTH_SHORT).show();
+                    }
                 });
+
     }
 
     // Deny Booking by updating its status in Firestore
     private void denyBooking(String bookingId, int position) {
-        // Correct Firestore path
-        String userId = "UserID";  // Replace with actual user ID
-        db.collection("Users").document(userId).collection("bookings").document(bookingId)
-                .update("status", "false")
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(context, "Booking denied successfully!", Toast.LENGTH_SHORT).show();
-                    notifyItemChanged(position); // Refresh the item in the list
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(context, "Error denying booking", Toast.LENGTH_SHORT).show();
+        // Fetch all users from the "Users" collection
+        db.collection("Users")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot userDoc : task.getResult()) {
+                            // Access the "bookings" subcollection for each user
+                            userDoc.getReference()
+                                    .collection("bookings")
+                                    .document(bookingId) // Specific booking ID to deny
+                                    .update("status", "false")
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(context, "Booking denied successfully!", Toast.LENGTH_SHORT).show();
+                                        Log.d("DenyBooking", "Booking denied: " + bookingId + " for user: " + userDoc.getId());
+                                        notifyItemChanged(position); // Refresh the list item
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("DenyBooking", "Error denying booking for user: " + userDoc.getId(), e);
+                                    });
+                        }
+                    } else {
+                        Log.e("FirestoreError", "Error fetching users", task.getException());
+                        Toast.makeText(context, "Error fetching users", Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewName, textViewBookingDetails;
+        TextView textViewBookingId, textViewBookingDetails;
         Button buttonViewDetails, buttonApprove, buttonDeny;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // Initialize UI components
-            textViewName = itemView.findViewById(R.id.textViewName);
+            textViewBookingId = itemView.findViewById(R.id.textViewBookingId);
             textViewBookingDetails = itemView.findViewById(R.id.textViewBookingDetails);
             buttonViewDetails = itemView.findViewById(R.id.buttonViewDetails);
             buttonApprove = itemView.findViewById(R.id.buttonApprove);
