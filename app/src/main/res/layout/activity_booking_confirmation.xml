@@ -45,10 +45,8 @@
                 android:id="@+id/venueImage"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:background="@drawable/bg_light_gray"
-                android:padding="12dp"
-                android:textSize="16sp"
-                android:fontFamily="@font/poppins_medium"/>
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_start_up" />
 
             <!--Name-->
             <TextView
