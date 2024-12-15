@@ -20,16 +20,16 @@
             android:exported="false" />
         <activity
             android:name=".main.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity> <!-- Main Activity -->
+            android:exported="true"/>
+             <!-- Main Activity -->
         <activity
             android:name=".startUp.Login"
-            android:exported="true" /> <!-- Sign Up -->
+            android:exported="true" >
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity> <!-- Sign Up -->
         <activity
             android:name=".startUp.SignUp"
             android:exported="true" /> <!-- Create Profile - Student -->
@@ -41,9 +41,6 @@
             android:exported="true" />
         <activity
             android:name=".userFx.bookingConfirmation"
-            android:exported="true" />
-        <activity
-            android:name=".userFx.BookingActivity"
             android:exported="true" />
 
         <meta-data
