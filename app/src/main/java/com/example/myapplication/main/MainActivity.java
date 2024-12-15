@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 if ("Admin".equals(userRole)) {
                     if (menuItemId == R.id.home) {
                         replaceFragment(new AdminHomeFragment());
-                    } else if (menuItemId == R.id.users) {
+                    } else if (menuItemId == R.id.edit) {
                         replaceFragment(new AdminUsersFragment());
                     } else if (menuItemId == R.id.profile) {
                         replaceFragment(new AdminProfileFragment());
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 if ("User".equals(userRole)) {
                     if (menuItemId == R.id.home) {
                         replaceFragment(new UserHomeFragment());
-                    } else if (menuItemId == R.id.booking) {
+                    } else if (menuItemId == R.id.edit) {
                         replaceFragment(new UserBookingFragment());
                     } else if (menuItemId == R.id.profile) {
                         replaceFragment(new UserProfileFragment());
@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Method to replace fragments in the container
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();

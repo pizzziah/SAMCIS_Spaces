@@ -27,16 +27,14 @@ public class AdminUsersFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.a_fragment_users, container, false);
 
-        // Initialize Firestore and RecyclerView
         db = FirebaseFirestore.getInstance();
         recyclerView = rootView.findViewById(R.id.userList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         userList = new ArrayList<>();
-        userAdapter = new UserAdapter(userList, getActivity()); // Pass the activity context to the adapter
+        userAdapter = new UserAdapter(userList, getActivity());
         recyclerView.setAdapter(userAdapter);
 
         fetchUsers();
@@ -53,7 +51,7 @@ public class AdminUsersFragment extends Fragment {
                         userList.clear();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             User user = document.toObject(User.class);
-                            user.setUserId(document.getId()); // Store document ID for deletion
+                            user.setUserId(document.getId());
                             userList.add(user);
                         }
                         userAdapter.notifyDataSetChanged();
@@ -65,9 +63,7 @@ public class AdminUsersFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle the back (home) button press
         if (item.getItemId() == android.R.id.home) {
-            // Navigate back to the AdminHomeFragment
             if (getActivity() != null) {
                 getActivity().onBackPressed();  // This will pop the current fragment off the stack
             }
