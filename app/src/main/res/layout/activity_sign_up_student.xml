@@ -54,7 +54,7 @@
             <!--ID Number-->
             <EditText
                 android:id="@+id/idNum"
-                android:inputType="textEmailAddress"
+                android:inputType="number"
                 android:hint="Enter ID Number"
 
                 android:layout_width="match_parent"

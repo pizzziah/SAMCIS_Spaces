@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".userFx.UserProfileFragment"
-    android:background="@color/light_brown">
+    android:background="@drawable/bg_blue_gradient">
 
     <RelativeLayout
         android:id="@+id/topContainer"
@@ -45,23 +45,6 @@
             android:textColor="@color/shadow"
             android:textSize="14sp" />
 
-        <Button
-            android:id="@+id/applyAdminButton"
-            android:layout_width="171dp"
-            android:layout_height="46dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="213dp"
-            android:layout_marginTop="121dp"
-            android:layout_marginEnd="19dp"
-            android:layout_marginBottom="5dp"
-
-            android:backgroundTint="@color/blue"
-            android:text="Apply as Admin"
-            android:textColor="@android:color/white"
-            android:textStyle="italic" />
     </RelativeLayout>
 
     <!-- Center Container with User Details -->
@@ -83,9 +66,23 @@
             android:text="USER PROFILE"
             android:textColor="@color/yellow"
             android:textStyle="bold"
+            android:layout_gravity="center"
             android:fontFamily="@font/montserrat_bold"
             android:layout_marginBottom="10dp"
             android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/editProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile "
+            android:textColor="@color/light_gray"
+            android:textStyle="italic"
+            android:drawableEnd="@drawable/ic_pen"
+            android:layout_gravity="center"
+            android:fontFamily="@font/poppins_medium"
+            android:layout_marginBottom="10dp"
+            android:textSize="17sp" />
 
         <!-- ID Number -->
         <TextView
@@ -96,7 +93,6 @@
             android:textColor="@color/yellow"
             android:textStyle="bold"
             android:fontFamily="@font/poppins_medium"
-
             android:textSize="16sp" />
 
         <TextView
@@ -104,8 +100,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
+            android:text="ID Number Information"
             android:fontFamily="@font/poppins_medium"
-
+            android:layout_marginBottom="10dp"
             android:textSize="14sp" />
 
         <!-- Program (Students only) -->
@@ -125,8 +122,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
+            android:text="Program Information"
             android:fontFamily="@font/poppins_medium"
-
+            android:layout_marginBottom="10dp"
             android:textSize="14sp" />
 
         <!-- Year Level (Students only) -->
@@ -147,7 +145,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:fontFamily="@font/poppins_medium"
-
+            android:layout_marginBottom="10dp"
+            android:text="Year Level Information"
             android:textSize="14sp" />
 
         <!-- Department (Faculty only) -->
@@ -168,6 +167,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:fontFamily="@font/poppins_medium"
+            android:layout_marginBottom="10dp"
+            android:text="Department Information"
             android:textSize="14sp" />
 
 

@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
+import com.example.myapplication.startUp.FacultyCreateProfile;
+import com.example.myapplication.startUp.SignUp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -59,7 +61,15 @@ public class EditProfileActivity extends AppCompatActivity {
 
         cancelBttn.setOnClickListener(v -> finish());
         saveBttn.setOnClickListener(v -> updateUserProfile());
-        adminApply.setOnClickListener(v -> applyAsAdminPopup());
+
+        adminApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EditProfileActivity.this, AdminApplication.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void updateFieldVisibility() {
@@ -87,7 +97,6 @@ public class EditProfileActivity extends AppCompatActivity {
         if (user != null) {
             String userId = user.getUid();
 
-            // Validate input
             if (TextUtils.isEmpty(name)) {
                 nameInput.setError("Name cannot be empty");
                 return;
@@ -98,7 +107,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 return;
             }
 
-            // Prepare updates
             Map<String, Object> updates = new HashMap<>();
             updates.put("FullName", name);
 
@@ -109,27 +117,23 @@ public class EditProfileActivity extends AppCompatActivity {
                 updates.put("Program", program);
             }
 
-            // Update Firestore
             db.collection("Users").document(userId)
                     .update(updates)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(EditProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
 
-                        // Update email if changed
                         if (!TextUtils.isEmpty(email)) {
                             user.updateEmail(email)
                                     .addOnSuccessListener(a -> Toast.makeText(this, "Email updated", Toast.LENGTH_SHORT).show())
                                     .addOnFailureListener(e -> Toast.makeText(this, "Email update failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
                         }
 
-                        // Update password if changed
                         if (!TextUtils.isEmpty(pwd)) {
                             user.updatePassword(pwd)
                                     .addOnSuccessListener(a -> Toast.makeText(this, "Password updated", Toast.LENGTH_SHORT).show())
                                     .addOnFailureListener(e -> Toast.makeText(this, "Password update failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
                         }
 
-                        // Navigate back to profile
                         Intent intent = new Intent(EditProfileActivity.this, UserProfileFragment.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -139,32 +143,5 @@ public class EditProfileActivity extends AppCompatActivity {
                         Toast.makeText(EditProfileActivity.this, "Failed to update profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     });
         }
-    }
-
-    private void applyAsAdminPopup() {
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Apply as Admin")
-                .setMessage("Are you sure you want to apply as an admin? This will send a request for approval.")
-                .setPositiveButton("Apply", (dialog, which) -> {
-                    FirebaseUser user = auth.getCurrentUser();
-                    if (user != null) {
-                        String userId = user.getUid();
-
-                        Map<String, Object> adminRequest = new HashMap<>();
-                        adminRequest.put("adminRequest", true);
-
-                        db.collection("Users").document(userId)
-                                .update(adminRequest)
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(EditProfileActivity.this, "Admin request sent successfully!", Toast.LENGTH_SHORT).show();
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(EditProfileActivity.this, "Failed to send admin request: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                });
-                    }
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                .create()
-                .show();
     }
 }
