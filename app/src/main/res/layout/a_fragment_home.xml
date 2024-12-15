@@ -1,0 +1,107 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".userFx.UserBookingFragment"
+    android:background="@drawable/bg_blue_gradient"
+    android:padding="16dp">
+
+    <!-- Heading -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Booking"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Search Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_light_gray"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_search"
+            android:layout_gravity="center_vertical"
+            app:tint="#808080" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Search"
+            android:textColor="#000000"
+            android:textColorHint="#808080"
+            android:paddingStart="8dp"
+            android:background="@null"
+            android:inputType="text" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <!-- Cancel Button -->
+        <Button
+            android:id="@+id/pendingBttn"
+            android:text="Pending"
+            android:layout_width="160dp"
+            android:layout_height="55dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="#99D7D7D7"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:fontFamily="@font/montserrat_bold" />
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/approvedBttn"
+            android:text="Approved"
+            android:layout_width="160dp"
+            android:layout_height="55dp"
+            android:backgroundTint="#9DFFBF55"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:fontFamily="@font/montserrat_bold" />
+    </LinearLayout>
+
+    <!-- Scrollable Venue Cards -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="403dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sort by: "
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:fontFamily="@font/montserrat_bold">
+            </TextView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerPast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" />
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
