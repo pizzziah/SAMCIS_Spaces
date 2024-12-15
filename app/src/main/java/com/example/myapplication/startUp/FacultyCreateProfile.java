@@ -102,7 +102,7 @@ public class FacultyCreateProfile extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(FacultyCreateProfile.this, "Profile saved successfully!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(FacultyCreateProfile.this, MainActivity.class);
+                        Intent intent = new Intent(FacultyCreateProfile.this, Login.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();

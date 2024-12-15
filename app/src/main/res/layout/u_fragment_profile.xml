@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".userFx.UserProfileFragment"
-    android:background="@drawable/bg_blue_gradient">
+    android:background="@drawable/bg_yellow_gradient">
 
     <RelativeLayout
         android:id="@+id/topContainer"

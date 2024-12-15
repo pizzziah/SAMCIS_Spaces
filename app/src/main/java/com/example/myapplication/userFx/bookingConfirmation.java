@@ -117,16 +117,13 @@ public class bookingConfirmation extends AppCompatActivity {
             }
         }, year, month, day);
 
-        // Set a custom date set listener (This part ensures that booked dates don't affect the calendar)
-        datePickerDialog.getDatePicker().setOnDateChangedListener((view, year1, month1, dayOfMonth) -> {
+        DatePicker datePicker = datePickerDialog.getDatePicker();
+        datePicker.setMinDate(System.currentTimeMillis() - 1000); // Prevent past dates
+        datePicker.init(year, month, day, (view, year1, month1, dayOfMonth) -> {
             String formattedDate = dayOfMonth + "/" + (month1 + 1) + "/" + year1;
-
-            // When the date is selected, check if it's booked
             if (bookedDates.contains(formattedDate)) {
-                // If the date is booked, show a Toast message and prevent selection
-                Toast.makeText(this, "This date is not available. Please choose another date.", Toast.LENGTH_SHORT).show();
-                bookingDateTextView.setText("Date: Not Available");
-                selectedDate = "";  // Clear the selected date if it's already booked
+                Toast.makeText(this, "This date is not available.", Toast.LENGTH_SHORT).show();
+                view.updateDate(year, month, day); // Revert to a default date
             }
         });
 

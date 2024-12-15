@@ -2,7 +2,6 @@ package com.example.myapplication.userFx;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -38,7 +37,7 @@ public class AdminApplication extends AppCompatActivity {
         saveBttn = findViewById(R.id.saveBttn);
 
         cancelBttn.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminApplication.this, EditProfileActivity.class);
+            Intent intent = new Intent(AdminApplication.this, UsersEditProfileActivity.class);
             startActivity(intent);
             finish();
         });

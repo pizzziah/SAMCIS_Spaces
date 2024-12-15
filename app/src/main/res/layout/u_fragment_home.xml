@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     tools:context=".userFx.UserBookingFragment"
-    android:background="@drawable/bg_blue_gradient"
-    android:padding="16dp">
+    android:background="@drawable/bg_yellow_gradient"
+    android:padding="30dp">
 
     <!-- Heading -->
     <TextView
@@ -15,7 +15,8 @@
         android:text="Booking"
         android:textSize="40dp"
         android:textStyle="bold"
-        android:textColor="#FFFFFF"
+        android:fontFamily="@font/montserrat_bold"
+        android:textColor="@color/blue"
         android:layout_marginBottom="16dp" />
 
     <!-- Search Bar -->
@@ -36,9 +37,10 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="40dp"
             android:hint="Search"
             android:textColor="#000000"
+            android:fontFamily="@font/poppins_medium"
             android:textColorHint="#808080"
             android:paddingStart="8dp"
             android:background="@null"
@@ -73,7 +75,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/logo_2" />
+                        android:src="@drawable/devesse" />
 
                     <!-- Details -->
                     <LinearLayout
@@ -86,6 +88,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Devesse Lobby"
+                            android:fontFamily="@font/poppins_medium"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="#000000" />
@@ -96,6 +99,7 @@
                             android:text="6th Floor"
                             android:textSize="14sp"
                             android:textColor="#808080"
+                            android:fontFamily="@font/poppins_medium"
                             android:layout_marginBottom="8dp" />
 
                         <Button
@@ -104,8 +108,10 @@
                             android:layout_height="wrap_content"
                             android:text="Check Availability"
                             android:textAllCaps="false"
-                            android:backgroundTint="#FFA500"
-                            android:textColor="#FFFFFF"
+                            android:fontFamily="@font/poppins_medium"
+
+                            android:backgroundTint="@color/yellow"
+                            android:textColor="@color/blue"
                             android:layout_marginTop="4dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -129,7 +135,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/logo_2" />
+                        android:src="@drawable/amphitheater" />
 
                     <!-- Details -->
                     <LinearLayout
@@ -144,12 +150,15 @@
                             android:text="Amphitheater"
                             android:textSize="16sp"
                             android:textStyle="bold"
+                            android:fontFamily="@font/poppins_medium"
+
                             android:textColor="#000000" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Open Space"
+                            android:fontFamily="@font/poppins_medium"
                             android:textSize="14sp"
                             android:textColor="#808080"
                             android:layout_marginBottom="8dp" />
@@ -160,8 +169,9 @@
                             android:layout_height="wrap_content"
                             android:text="Check Availability"
                             android:textAllCaps="false"
-                            android:backgroundTint="#FFA500"
-                            android:textColor="#FFFFFF"
+                            android:fontFamily="@font/poppins_medium"
+                            android:backgroundTint="@color/yellow"
+                            android:textColor="@color/blue"
                             android:layout_marginTop="4dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -185,7 +195,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/logo_2" />
+                        android:src="@drawable/oval" />
 
                     <!-- Details -->
                     <LinearLayout
@@ -200,6 +210,7 @@
                             android:text="Desmedt Oval"
                             android:textSize="16sp"
                             android:textStyle="bold"
+                            android:fontFamily="@font/poppins_medium"
                             android:textColor="#000000" />
 
                         <TextView
@@ -207,6 +218,7 @@
                             android:layout_height="wrap_content"
                             android:text="Open Space"
                             android:textSize="14sp"
+                            android:fontFamily="@font/poppins_medium"
                             android:textColor="#808080"
                             android:layout_marginBottom="8dp" />
 
@@ -216,8 +228,9 @@
                             android:layout_height="wrap_content"
                             android:text="Check Availability"
                             android:textAllCaps="false"
-                            android:backgroundTint="#FFA500"
-                            android:textColor="#FFFFFF"
+                            android:backgroundTint="@color/yellow"
+                            android:fontFamily="@font/poppins_medium"
+                            android:textColor="@color/blue"
                             android:layout_marginTop="4dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -241,7 +254,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/logo_2" />
+                        android:src="@drawable/comlab" />
 
                     <!-- Details -->
                     <LinearLayout
@@ -256,6 +269,7 @@
                             android:text="iMac Laboratory"
                             android:textSize="16sp"
                             android:textStyle="bold"
+                            android:fontFamily="@font/poppins_medium"
                             android:textColor="#000000" />
 
                         <TextView
@@ -263,6 +277,7 @@
                             android:layout_height="wrap_content"
                             android:text="4th Floor"
                             android:textSize="14sp"
+                            android:fontFamily="@font/poppins_medium"
                             android:textColor="#808080"
                             android:layout_marginBottom="8dp" />
 
@@ -272,8 +287,9 @@
                             android:layout_height="wrap_content"
                             android:text="Check Availability"
                             android:textAllCaps="false"
-                            android:backgroundTint="#FFA500"
-                            android:textColor="#FFFFFF"
+                            android:backgroundTint="@color/yellow"
+                            android:fontFamily="@font/poppins_medium"
+                            android:textColor="@color/blue"
                             android:layout_marginTop="4dp" />
                     </LinearLayout>
                 </LinearLayout>

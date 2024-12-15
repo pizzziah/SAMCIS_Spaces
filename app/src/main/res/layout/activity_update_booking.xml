@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/bg_yellow_gradient">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,20 +16,15 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp" />
 
-    <!-- Venue Name EditText -->
-    <EditText
-        android:id="@+id/editTextVenueName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Venue Name" />
-
     <!-- Date EditText -->
     <EditText
         android:id="@+id/editTextDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Date (yyyy-mm-dd)"
-        android:minHeight="48dp" />
+        android:hint="Edit Date"
+        android:minHeight="48dp"
+        android:focusable="false"
+        android:clickable="true" />
 
     <!-- Update Button -->
     <Button
