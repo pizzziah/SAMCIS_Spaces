@@ -55,15 +55,17 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:fontFamily="@font/poppins_medium"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"/>
 
-        <!-- Time -->
+        <!-- Availability -->
         <TextView
-            android:id="@+id/popupBookingTime"
+            android:id="@+id/popupBookingAvailability"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Time: Loading..."
+            android:text="Availability: Loading..."
             android:textColor="@color/white"
             android:textSize="16sp"
             android:fontFamily="@font/poppins_medium"

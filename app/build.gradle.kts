@@ -1,4 +1,4 @@
-plugins {
+    plugins {
     id("com.android.application")          // Android application plugin
     id("org.jetbrains.kotlin.android")     // Kotlin plugin
     id("com.google.gms.google-services")   // Google services plugin for Firebase
@@ -44,7 +44,7 @@ dependencies {
     // Firebase Dependencies
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation("com.google.firebase:firebase-firestore:24.10.0")
-    implementation ("com.google.firebase:firebase-database:20.3.1")
+
 
     // Google Play Services for Authentication
     implementation("com.google.android.gms:play-services-auth:21.1.1")
