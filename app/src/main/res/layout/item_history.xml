@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingTop="30dp"
+        android:paddingTop="25dp"
         android:paddingStart="8dp">
 
         <TextView
@@ -27,8 +27,8 @@
             android:layout_height="wrap_content"
             android:text="Venue Name"
             android:textColor="#FFFFFF"
-            android:textSize="18dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textSize="20dp" />
 
         <TextView
             android:id="@+id/bookingDate"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:text="Date"
             android:textColor="#FFFFFF"
-            android:textSize="14dp" />
+            android:textSize="20dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Update"
-            android:textSize="15dp"
+            android:textSize="12sp"
             android:backgroundTint="#2ECC71"
             android:textColor="#FFFFFF" />
 
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
-            android:textSize="15dp"
+            android:textSize="12sp"
             android:backgroundTint="#E74C3C"
             android:textColor="#FFFFFF"
             android:layout_marginTop="4dp" />

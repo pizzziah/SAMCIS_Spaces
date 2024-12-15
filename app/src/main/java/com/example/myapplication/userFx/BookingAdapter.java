@@ -36,15 +36,25 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
     public void onBindViewHolder(@NonNull BookingViewHolder holder, int position) {
         Booking booking = bookingList.get(position);
 
-        holder.venueName.setText(booking.getVenueName());
-        holder.bookingDate.setText(booking.getDate());
+        // Set the venue name and booking date
+        holder.venueName.setText(booking.getVenueName() != null ? booking.getVenueName() : "Unknown Venue");
+        holder.bookingDate.setText(booking.getDate() != null ? booking.getDate() : "No Date");
 
+        // Cancel button logic
         holder.btnCancel.setOnClickListener(v -> {
-            db.collection("bookings").document(booking.getId()).delete();
-            bookingList.remove(position);
-            notifyDataSetChanged();
+            db.collection("bookings").document(booking.getId())
+                    .delete()
+                    .addOnSuccessListener(aVoid -> {
+                        bookingList.remove(position);
+                        notifyItemRemoved(position);
+                    })
+                    .addOnFailureListener(e -> {
+                        e.printStackTrace();
+                        // Optionally show a Toast for failure
+                    });
         });
 
+        // Update button logic
         holder.btnUpdate.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), UpdateBookingActivity.class);
             intent.putExtra("bookingId", booking.getId());
