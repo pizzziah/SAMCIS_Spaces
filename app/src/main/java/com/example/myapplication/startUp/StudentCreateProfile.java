@@ -10,10 +10,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
 import com.example.myapplication.main.MainActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -35,7 +38,6 @@ public class StudentCreateProfile extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up_student);
 
         db = FirebaseFirestore.getInstance();
-
         userId = getIntent().getStringExtra("USER_ID");
 
         idNum = findViewById(R.id.idNum);
@@ -44,6 +46,7 @@ public class StudentCreateProfile extends AppCompatActivity {
         cancelBttn = findViewById(R.id.cancelBttn);
         saveBttn = findViewById(R.id.saveBttn);
 
+        // Populate Spinner with Programs
         String[] programs = {
                 "Choose Program",
                 "BS in Accountancy",
@@ -61,9 +64,9 @@ public class StudentCreateProfile extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, programs);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         programSpinner.setAdapter(adapter);
 
+        // Cancel Button Action
         cancelBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,45 +76,54 @@ public class StudentCreateProfile extends AppCompatActivity {
             }
         });
 
+        // Save Button Action
         saveBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String idNumber = idNum.getText().toString().trim();
-                String fullName = yearLevel.getText().toString().trim();
+                String yearLevelValue = yearLevel.getText().toString().trim();
                 String selectedProgram = programSpinner.getSelectedItem().toString();
 
-                if (idNumber.isEmpty() || fullName.isEmpty() || selectedProgram.equals("Choose Program")) {
+                // Input Validation
+                if (idNumber.isEmpty() || yearLevelValue.isEmpty() || selectedProgram.equals("Choose Program")) {
                     if (idNumber.isEmpty()) idNum.setError("This field is required");
-
-                    if (fullName.isEmpty()) yearLevel.setError("This field is required");
-
+                    if (yearLevelValue.isEmpty()) yearLevel.setError("This field is required");
                     if (selectedProgram.equals("Choose Program"))
                         Toast.makeText(StudentCreateProfile.this, "Please choose a program.", Toast.LENGTH_SHORT).show();
                 } else {
-                    saveStudentProfile(idNumber, fullName, selectedProgram);
+                    saveStudentProfile(idNumber, yearLevelValue, selectedProgram);
                 }
             }
-        });    }
+        });
+    }
 
-    private void saveStudentProfile(String idNumber, String fullName, String program) {
+    private void saveStudentProfile(String idNumber, String yearLevel, String program) {
         DocumentReference userRef = db.collection("Users").document(userId);
 
+        // Prepare data to save in Firestore
         Map<String, Object> studentProfile = new HashMap<>();
         studentProfile.put("ID Number", idNumber);
         studentProfile.put("Year Level", yearLevel);
         studentProfile.put("Program", program);
         studentProfile.put("ProfileComplete", true);
 
+        // Update Firestore document
         userRef.update(studentProfile)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(StudentCreateProfile.this, "Profile saved successfully!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(StudentCreateProfile.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(StudentCreateProfile.this, "Profile saved successfully!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(StudentCreateProfile.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(StudentCreateProfile.this, "Error saving profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(StudentCreateProfile.this, "Error saving profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
 }
