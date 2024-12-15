@@ -1,45 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/createProfile"
+    android:id="@+id/signUpPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_start_up"
+    android:background="@color/light_brown"
     android:padding="24dp"
-    tools:context=".startUp.FacultyCreateProfile">
+    tools:context=".userFx.AdminApplication">
 
     <LinearLayout
-        android:id="@+id/createProfileContainer"
-
+        android:id="@+id/startupContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!--Logo-->
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/logo_2_drop_shadow_cropped" />
-
         <TextView
-            android:id="@+id/userType"
-            android:text="Faculty"
-
+            android:id="@+id/applyAsAdmin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@android:color/transparent"
             android:textAlignment="center"
             android:fontFamily="@font/montserrat_bold"
-            android:shadowColor="@color/black"
+            android:shadowColor="@color/shadow"
             android:shadowDx="10"
             android:shadowDy="10"
             android:shadowRadius="10"
-            android:textColor="@color/white"
+            android:text="Apply as Admin"
+            android:textColor="#143373"
             android:textSize="25sp" />
 
         <!--INFORMATION CONTAINER-->
@@ -51,31 +40,31 @@
             android:padding="12dp"
             android:layout_marginTop="5dp">
 
-            <!--ID Number-->
-            <EditText
-                android:id="@+id/idNum"
-                android:inputType="number"
-                android:hint="Enter ID Number"
-
+            <TextView
+                android:id="@+id/applicationInstructions"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/transparent"
+                android:textAlignment="center"
+                android:fontFamily="@font/poppins_medium"
+                android:textStyle="bold"
+                android:text="Enter verification code to apply as Admin."
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <!--Name-->
+            <EditText
+                android:id="@+id/enterCode"
+                android:inputType="number"
+                android:hint="Edit Verification Code"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
                 android:layout_height="60dp"
                 android:background="@drawable/bg_light_gray"
                 android:padding="12dp"
                 android:textSize="16sp"
                 android:fontFamily="@font/poppins_medium"/>
-
-            <!--Department-->
-            <Spinner
-                android:id="@+id/deptCategory"
-                android:spinnerMode="dropdown"
-
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_light_gray"
-                android:padding="12dp"
-                android:textSize="16sp"
-                android:fontFamily="@font/poppins_medium" />
 
             <!--Buttons-->
             <LinearLayout
@@ -84,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginTop="40dp">
+                android:layout_marginTop="25dp">
 
                 <!-- Cancel Button -->
                 <Button
