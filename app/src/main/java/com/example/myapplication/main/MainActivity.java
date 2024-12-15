@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -25,9 +26,12 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Set the default fragment to Home
-        replaceFragment(new UserHomeFragment());
+        // Set the default fragment to UserHomeFragment
+        if (savedInstanceState == null) {
+            replaceFragment(new UserHomeFragment());
+        }
 
+        // Handle bottom navigation item selection
         binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -45,10 +49,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Replace the current fragment with the selected fragment
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(null); // Optional: Add to back stack
         transaction.commit();
     }
 }
