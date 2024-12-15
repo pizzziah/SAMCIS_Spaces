@@ -16,9 +16,7 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
 
-        <activity
-            android:name=".adminFx.AdminPage"
-            android:exported="false" />
+
         <activity
             android:name=".userFx.UpdateBookingActivity"
             android:exported="false" />
@@ -27,16 +25,21 @@
             android:exported="true" /> <!-- Main Activity -->
         <activity
             android:name=".adminFx.AdminPageActivity"
+            android:exported="true"/>
+        <!-- Sign Up -->
+        <activity
+            android:name=".startUp.SignUp"
+            android:exported="true" />
+        <activity
+            android:name=".startUp.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Sign Up -->
-        <activity
-            android:name=".startUp.SignUp"
-            android:exported="true" /> <!-- Create Profile - Student -->
+        </activity>
+        <!-- Create Profile - Student -->
         <activity
             android:name=".startUp.StudentCreateProfile"
             android:exported="true" /> <!-- Create Profile - Faculty -->

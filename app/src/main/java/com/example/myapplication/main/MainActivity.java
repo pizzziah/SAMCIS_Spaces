@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
 
-                if ("Admin".equals(userRole)) {
+                if ("User".equals(userRole)) {  // Corrected here
                     if (menuItemId == R.id.home) {
                         replaceFragment(new UserHomeFragment());
                     } else if (menuItemId == R.id.booking) {
@@ -77,4 +77,3 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 }
-
