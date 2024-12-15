@@ -1,6 +1,5 @@
 package com.example.myapplication.userFx;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,17 +11,17 @@ public class Booking {
     private String venueName;
     private String date; // Format: "yyyy-MM-dd"
 
-    // Default constructor (necessary for Firestore deserialization)
+    // Default constructor (required for Firestore deserialization)
     public Booking() {}
 
-    // Constructor that accepts id, venueName, and date
+    // Constructor
     public Booking(String id, String venueName, String date) {
         this.id = id;
         this.venueName = venueName;
         this.date = date;
     }
 
-    // Getter and setter for the id field
+    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -31,7 +30,6 @@ public class Booking {
         this.id = id;
     }
 
-    // Getter and setter for the venueName field
     public String getVenueName() {
         return venueName;
     }
@@ -40,7 +38,6 @@ public class Booking {
         this.venueName = venueName;
     }
 
-    // Getter and setter for the date field
     public String getDate() {
         return date;
     }
@@ -49,28 +46,30 @@ public class Booking {
         this.date = date;
     }
 
-    // Method to check if the booking is for today
+    // Check if the booking date is today
     public boolean isToday() {
-        // Define date format
+        if (date == null || date.isEmpty()) return false;
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
         try {
-            // Parse the booking date
             Date bookingDate = sdf.parse(date);
+            Calendar bookingCalendar = Calendar.getInstance();
+            bookingCalendar.setTime(bookingDate);
 
-            // Get today's date with the same format
             Calendar today = Calendar.getInstance();
             today.set(Calendar.HOUR_OF_DAY, 0);
             today.set(Calendar.MINUTE, 0);
             today.set(Calendar.SECOND, 0);
             today.set(Calendar.MILLISECOND, 0);
 
-            // Compare booking date and today's date
-            return bookingDate.equals(today.getTime());
+            return bookingCalendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+                    bookingCalendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR);
 
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
         return false;
     }
 }
