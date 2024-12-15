@@ -1,7 +1,5 @@
 package com.example.myapplication.userFx;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,21 +21,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
-    EditText emailInput, nameInput, pwdInput, confirmPwd, programInput, yearLevelInput, departmentInput;
+    EditText emailInput, nameInput, pwdInput, confirmPwd, departmentInput, yearLevelInput, programInput;
     TextView adminApply;
     Button cancelBttn, saveBttn;
-    String userCategory;
+
     FirebaseAuth auth;
     FirebaseFirestore db;
+
+    String userCategory;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        // Initialize Firebase instances
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        // Initialize UI components
         emailInput = findViewById(R.id.editEmail);
         nameInput = findViewById(R.id.editName);
         pwdInput = findViewById(R.id.editPassword);
@@ -46,53 +48,29 @@ public class EditProfileActivity extends AppCompatActivity {
         cancelBttn = findViewById(R.id.cancelBttn);
         saveBttn = findViewById(R.id.saveBttn);
 
-        // Add inputs for program, year level, and department
-        programInput = findViewById(R.id.editProgram);
-        yearLevelInput = findViewById(R.id.editYearLevel);
+        // New EditTexts for additional fields
         departmentInput = findViewById(R.id.editDepartment);
+        yearLevelInput = findViewById(R.id.editYearLevel);
+        programInput = findViewById(R.id.editProgram);
+
+        userCategory = getIntent().getStringExtra("UserCategory");
+
+        updateFieldVisibility();
 
         cancelBttn.setOnClickListener(v -> finish());
-
         saveBttn.setOnClickListener(v -> updateUserProfile());
         adminApply.setOnClickListener(v -> applyAsAdminPopup());
-
-        loadUserProfile();
     }
 
-    private void loadUserProfile() {
-        FirebaseUser user = auth.getCurrentUser();
-
-        if (user != null) {
-            String userId = user.getUid();
-
-            db.collection("Users").document(userId).get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            String category = documentSnapshot.contains("Category") ? documentSnapshot.getString("Category") : "N/A";
-
-                            // Show or hide fields based on category
-                            if ("Student".equalsIgnoreCase(category)) {
-                                programInput.setVisibility(View.VISIBLE);
-                                yearLevelInput.setVisibility(View.VISIBLE);
-                                departmentInput.setVisibility(View.GONE);
-
-                                // Pre-fill the student fields
-                                programInput.setText(documentSnapshot.contains("Program") ? documentSnapshot.getString("Program") : "");
-                                yearLevelInput.setText(documentSnapshot.contains("Year Level") ? documentSnapshot.getString("Year Level") : "");
-
-                            } else if ("Faculty".equalsIgnoreCase(category)) {
-                                programInput.setVisibility(View.GONE);
-                                yearLevelInput.setVisibility(View.GONE);
-                                departmentInput.setVisibility(View.VISIBLE);
-
-                                // Pre-fill the faculty department field
-                                departmentInput.setText(documentSnapshot.contains("Department") ? documentSnapshot.getString("Department") : "");
-                            }
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(EditProfileActivity.this, "Failed to load profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    });
+    private void updateFieldVisibility() {
+        if ("Faculty".equalsIgnoreCase(userCategory)) {
+            departmentInput.setVisibility(View.VISIBLE);
+            yearLevelInput.setVisibility(View.GONE);
+            programInput.setVisibility(View.GONE);
+        } else if ("Student".equalsIgnoreCase(userCategory)) {
+            yearLevelInput.setVisibility(View.VISIBLE);
+            programInput.setVisibility(View.VISIBLE);
+            departmentInput.setVisibility(View.GONE);
         }
     }
 
@@ -101,16 +79,15 @@ public class EditProfileActivity extends AppCompatActivity {
         String name = nameInput.getText().toString().trim();
         String pwd = pwdInput.getText().toString().trim();
         String confirmPass = confirmPwd.getText().toString().trim();
-        String program = programInput.getText().toString().trim();
-        String yearLevel = yearLevelInput.getText().toString().trim();
         String department = departmentInput.getText().toString().trim();
+        String yearLevel = yearLevelInput.getText().toString().trim();
+        String program = programInput.getText().toString().trim();
 
         FirebaseUser user = auth.getCurrentUser();
-
         if (user != null) {
             String userId = user.getUid();
 
-            // Validate Input
+            // Validate input
             if (TextUtils.isEmpty(name)) {
                 nameInput.setError("Name cannot be empty");
                 return;
@@ -121,38 +98,38 @@ public class EditProfileActivity extends AppCompatActivity {
                 return;
             }
 
-            // Update Firestore
+            // Prepare updates
             Map<String, Object> updates = new HashMap<>();
             updates.put("FullName", name);
 
-            // Add Program, Year Level, or Department based on the category
-            FirebaseUser currentUser = auth.getCurrentUser();
-            String category = currentUser.getDisplayName(); // Assuming category is stored as displayName for simplicity
-
-            if ("Student".equalsIgnoreCase(category)) {
-                updates.put("Program", program);
-                updates.put("Year Level", yearLevel);
-            } else if ("Faculty".equalsIgnoreCase(category)) {
+            if ("Faculty".equalsIgnoreCase(userCategory)) {
                 updates.put("Department", department);
+            } else if ("Student".equalsIgnoreCase(userCategory)) {
+                updates.put("YearLevel", yearLevel);
+                updates.put("Program", program);
             }
 
+            // Update Firestore
             db.collection("Users").document(userId)
                     .update(updates)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(EditProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
 
+                        // Update email if changed
                         if (!TextUtils.isEmpty(email)) {
                             user.updateEmail(email)
                                     .addOnSuccessListener(a -> Toast.makeText(this, "Email updated", Toast.LENGTH_SHORT).show())
                                     .addOnFailureListener(e -> Toast.makeText(this, "Email update failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
                         }
 
+                        // Update password if changed
                         if (!TextUtils.isEmpty(pwd)) {
                             user.updatePassword(pwd)
                                     .addOnSuccessListener(a -> Toast.makeText(this, "Password updated", Toast.LENGTH_SHORT).show())
                                     .addOnFailureListener(e -> Toast.makeText(this, "Password update failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
                         }
 
+                        // Navigate back to profile
                         Intent intent = new Intent(EditProfileActivity.this, UserProfileFragment.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -165,32 +142,29 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void applyAsAdminPopup() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Apply as Admin");
-        builder.setMessage("Are you sure you want to apply as an admin? This will send a request for approval.");
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Apply as Admin")
+                .setMessage("Are you sure you want to apply as an admin? This will send a request for approval.")
+                .setPositiveButton("Apply", (dialog, which) -> {
+                    FirebaseUser user = auth.getCurrentUser();
+                    if (user != null) {
+                        String userId = user.getUid();
 
-        builder.setPositiveButton("Apply", (dialog, which) -> {
-            FirebaseUser user = auth.getCurrentUser();
-            if (user != null) {
-                String userId = user.getUid();
+                        Map<String, Object> adminRequest = new HashMap<>();
+                        adminRequest.put("adminRequest", true);
 
-                Map<String, Object> adminRequest = new HashMap<>();
-                adminRequest.put("adminRequest", true);
-
-                db.collection("Users").document(userId)
-                        .update(adminRequest)
-                        .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(EditProfileActivity.this, "Admin request sent successfully!", Toast.LENGTH_SHORT).show();
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(EditProfileActivity.this, "Failed to send admin request: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        });
-            }
-        });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+                        db.collection("Users").document(userId)
+                                .update(adminRequest)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(EditProfileActivity.this, "Admin request sent successfully!", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(EditProfileActivity.this, "Failed to send admin request: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                });
+                    }
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
     }
 }
