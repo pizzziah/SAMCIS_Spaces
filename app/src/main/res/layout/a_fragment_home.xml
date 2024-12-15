@@ -72,7 +72,6 @@
             </TextView>
 
             <LinearLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -138,21 +137,21 @@
                     <Button
                         android:id="@+id/buttonApprove"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="Approve"
+                        android:layout_height="48dp"
                         android:backgroundTint="#99D7D7D7"
+                        android:text="Approve"
                         android:textColor="@color/black"
                         android:textSize="12sp" />
 
                     <Button
                         android:id="@+id/buttonDeny"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="Deny"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="5dp"
                         android:backgroundTint="#9DFFBF55"
+                        android:text="Deny"
                         android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:layout_marginTop="5dp" />
+                        android:textSize="12sp" />
                 </LinearLayout>
 
             </LinearLayout>
