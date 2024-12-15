@@ -19,10 +19,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AdminHomeFragment extends Fragment {
 
-    private FirebaseFirestore db; // Firestore instance
+    private FirebaseFirestore db;
 
     public AdminHomeFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -34,18 +33,15 @@ public class AdminHomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.u_fragment_home, container, false);
 
         Log.e("UserBookingFragment", "Venue");
 
-        // Buttons for venues
         Button buttonDevesse = view.findViewById(R.id.check_availability_button_devesse);
         Button buttonAmphi = view.findViewById(R.id.check_availability_button_amphi);
         Button buttonOval = view.findViewById(R.id.check_availability_button_oval);
         Button buttonLab = view.findViewById(R.id.check_availability_button_lab);
 
-        // Set listeners for each button
         buttonDevesse.setOnClickListener(v -> fetchVenueDetails("AjNc3sDvHrvNIH4fXNvd"));
         buttonAmphi.setOnClickListener(v -> fetchVenueDetails("mm4OzygytxnJ6oG3JDel"));
         buttonOval.setOnClickListener(v -> fetchVenueDetails("yjFP5Z7Wy5IgXCNQbBKp"));
@@ -57,10 +53,8 @@ public class AdminHomeFragment extends Fragment {
     private void fetchVenueDetails(String venueId) {
         Log.e("UserBookingFragment", "Fetching Firestore document: " + venueId);
 
-        // Reference to the Firestore document for the venue
         DocumentReference venueRef = db.collection("venues").document(venueId);
 
-        // Fetch the document from Firestore
         venueRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -74,7 +68,6 @@ public class AdminHomeFragment extends Fragment {
 
 
                     if (venueName != null && venueFloor != null) {
-                        // Pass dynamic data to the booking activity
                         openBookingActivity(venueName, venueFloor, venueAvailability);
                     } else {
                         Log.e("UserBookingFragment", "Venue details are incomplete");
@@ -91,18 +84,15 @@ public class AdminHomeFragment extends Fragment {
         });
     }
 
-    // Open the booking activity with fetched data
     private void openBookingActivity(String venueName, String venueFloor, Boolean venueAvailability) {
         Log.e("UserBookingFragment", "Trying to open Booking Activity");
 
         Intent intent = new Intent(getActivity(), bookingConfirmation.class);
 
-        // Pass dynamic data to the activity
         intent.putExtra("venueName", venueName);
         intent.putExtra("venueFloor", venueFloor);
         intent.putExtra("venueAvailability", venueAvailability);
 
-        // Start the activity
         startActivity(intent);
     }
 }

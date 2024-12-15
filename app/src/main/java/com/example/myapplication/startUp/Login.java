@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
@@ -22,9 +21,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Login extends AppCompatActivity {
@@ -34,7 +30,7 @@ public class Login extends AppCompatActivity {
     private boolean isPasswordVisible = false;
 
     private FirebaseAuth fAuth;
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +38,14 @@ public class Login extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        // Initialize Firebase
         fAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Initialize views
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginButton);
         signUp = findViewById(R.id.signUp);
 
-        // Set listeners
         password.setOnClickListener(v -> togglePasswordVisibility());
 
         loginButton.setOnClickListener(v -> handleLogin());
@@ -108,21 +101,23 @@ public class Login extends AppCompatActivity {
     }
 
     private void fetchUserDetails(String userId) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         db.collection("Users").document(userId).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult().exists()) {
-                        // Retrieve user data from Firestore
                         String userRole = task.getResult().getString("UserRole");
 
                         if (userRole != null) {
                             userRole = userRole.trim();
                             android.util.Log.d("USER_ROLE", "Fetched role: " + userRole);
 
-                            if ("User".equalsIgnoreCase(userRole)) {
+                            if ("Admin".equalsIgnoreCase(userRole)) {
                                 Intent intent = new Intent(Login.this, MainActivity.class);
-                                intent.putExtra("fragment", UserHomeFragment.class.getName());
+                                intent.putExtra("UserRole", "Admin");
+                                startActivity(intent);
+                                finish();
+                            } else if ("User".equalsIgnoreCase(userRole)) {
+                                Intent intent = new Intent(Login.this, MainActivity.class);
+                                intent.putExtra("UserRole", "User");
                                 startActivity(intent);
                                 finish();
                             } else {
@@ -137,5 +132,4 @@ public class Login extends AppCompatActivity {
                     Toast.makeText(Login.this, "Failed to fetch user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-
 }
