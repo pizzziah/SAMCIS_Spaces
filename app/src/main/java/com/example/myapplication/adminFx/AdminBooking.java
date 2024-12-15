@@ -32,6 +32,10 @@ public class AdminBooking {
         BookingId = bookingId;
     }
 
+    public void setBookingDetails(String bookingDetails) {
+        BookingDetails = bookingDetails;
+    }
+
     public String getBookingId() {
         return BookingID;
     }

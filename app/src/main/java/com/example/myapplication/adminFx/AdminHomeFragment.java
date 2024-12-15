@@ -2,6 +2,7 @@ package com.example.myapplication.adminFx;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -48,8 +51,16 @@ public class AdminHomeFragment extends Fragment {
         return rootView;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void fetchBookings() {
-        db.collection("Users.bookings")
+        // Reference to the parent document (e.g., User document)
+        DocumentReference userDocument = db.collection("Users").document("UserID");  // Change "UserID" to the actual user ID you want
+
+        // Reference to the "bookings" subcollection
+        CollectionReference bookingsSubcollection = userDocument.collection("bookings");
+
+        // Fetch bookings from the subcollection
+        bookingsSubcollection
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -58,11 +69,21 @@ public class AdminHomeFragment extends Fragment {
                             AdminBooking booking = document.toObject(AdminBooking.class);
                             booking.setBookingId(document.getId()); // Store document ID for operations
                             bookingList.add(booking);
+
+                            // Debugging - Log the fetched data
+                            Log.d("BookingData", "Fetched booking: " + booking.getBookingId());
                         }
+
+                        // Check if the list is populated
+                        Log.d("BookingList", "Booking list size: " + bookingList.size());
+
+                        // Notify adapter to update the view
                         adminBookingAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(getContext(), "Failed to fetch bookings", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
+
 }

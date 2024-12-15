@@ -23,9 +23,7 @@
         <activity
             android:name=".main.MainActivity"
             android:exported="true" /> <!-- Main Activity -->
-        <activity
-            android:name=".adminFx.AdminPageActivity"
-            android:exported="true"/>
+
         <!-- Sign Up -->
         <activity
             android:name=".startUp.SignUp"
