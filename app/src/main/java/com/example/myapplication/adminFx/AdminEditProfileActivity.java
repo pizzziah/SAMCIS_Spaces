@@ -50,7 +50,7 @@ public class AdminEditProfileActivity extends AppCompatActivity {
         yearLevelInput = findViewById(R.id.editYearLevel);
         programInput = findViewById(R.id.editProgram);
 
-        userCategory = getIntent().getStringExtra("UserCategory");
+        userCategory = getIntent().getStringExtra("UserRole");
 
         updateFieldVisibility();
 

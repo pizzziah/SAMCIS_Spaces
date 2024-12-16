@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/light_brown"
     android:padding="24dp"
-    tools:context=".userFx.UsersEditProfileActivity">
+    tools:context=".adminFx.AdminEditProfileActivity">
 
     <LinearLayout
         android:id="@+id/startupContainer"
@@ -131,9 +131,6 @@
                 android:fontFamily="@font/poppins_medium"
                 android:drawableEnd="@drawable/ic_eye_slash"
                 android:drawableTint="@color/shadow"/>
-
-            <!-- Apply as Admin -->
-
 
             <!--Buttons-->
             <LinearLayout
