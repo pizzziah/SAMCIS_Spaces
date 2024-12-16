@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -97,9 +98,21 @@ public class AdminEditProfileActivity extends AppCompatActivity {
             if (!TextUtils.isEmpty(name)) {
                 updates.put("FullName", name);
             }
+
+            if (!TextUtils.isEmpty(email)) {
+                updates.put("UserEmail", email);
+
+                user.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(email).build())
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(this, "Email updated successfully", Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(this, "Failed to update name: " + e.getMessage(), Toast.LENGTH_LONG).show());
+            }
+
             if ("Faculty".equalsIgnoreCase(userCategory) && !TextUtils.isEmpty(department)) {
                 updates.put("Department", department);
             }
+
             if ("Student".equalsIgnoreCase(userCategory)) {
                 if (!TextUtils.isEmpty(yearLevel)) {
                     updates.put("YearLevel", yearLevel);
@@ -113,12 +126,6 @@ public class AdminEditProfileActivity extends AppCompatActivity {
                     .update(updates)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(AdminEditProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-
-                        if (!TextUtils.isEmpty(email)) {
-                            user.updateEmail(email)
-                                    .addOnSuccessListener(a -> Toast.makeText(this, "Email updated", Toast.LENGTH_SHORT).show())
-                                    .addOnFailureListener(e -> Toast.makeText(this, "Email update failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
-                        }
 
                         if (!TextUtils.isEmpty(pwd)) {
                             if (pwd.equals(confirmPass)) {
