@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -33,16 +35,16 @@ public class MainActivity extends AppCompatActivity {
 
         if ("Admin".equals(userRole)) {
             replaceFragment(new AdminHomeFragment());
-        }
-
-        if ("User".equals(userRole)) {
+        } else if ("User".equals(userRole)) {
             replaceFragment(new UserHomeFragment());
+        } else {
+            Toast.makeText(this, "Invalid user role!", Toast.LENGTH_SHORT).show();
         }
 
-        // Setup the bottom navigation listener
         binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
                 int menuItemId = item.getItemId();
 
                 if ("Admin".equals(userRole)) {

@@ -56,6 +56,7 @@ public class UsersEditProfileActivity extends AppCompatActivity {
 
         updateFieldVisibility();
 
+
         cancelBttn.setOnClickListener(v -> {
             startActivity(new Intent(UsersEditProfileActivity.this, UserProfileFragment.class));
         });

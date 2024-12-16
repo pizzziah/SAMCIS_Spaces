@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
+import com.example.myapplication.main.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -92,7 +93,7 @@ public class AdminApplication extends AppCompatActivity {
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(AdminApplication.this, "Verification successful! You are now an Admin.", Toast.LENGTH_LONG).show();
 
-                            Intent intent = new Intent(AdminApplication.this, UserProfileFragment.class);
+                            Intent intent = new Intent(AdminApplication.this, MainActivity.class);
                             intent.putExtra("UserRole", "Admin");
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
