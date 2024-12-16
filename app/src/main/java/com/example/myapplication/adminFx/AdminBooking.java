@@ -5,7 +5,7 @@ public class AdminBooking {
     private String bookingId;
     private String bookingDetails;
     private String User;
-    private String bookingDate;
+    private String date;
     private boolean
             bookingStatus; // E.g., "Pending", "Approved", "Denied"
 
@@ -18,7 +18,7 @@ public class AdminBooking {
         this.bookingId = bookingId;
         this.bookingDetails = bookingDetails;
         this.User = User;
-        this.bookingDate = bookingDate;
+        this.date = date;
         this.bookingStatus = bookingStatus;
     }
 
@@ -47,17 +47,18 @@ public class AdminBooking {
         this.User = User;
     }
 
-    public String getBookingDate() {
-        return bookingDate;
+    public String getDate() {
+        return date;
     }
 
-    public void setBookingDate(String bookingDate) {
-        this.bookingDate = bookingDate;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public boolean getBookingStatus() {
         return bookingStatus;
     }
+
 
     public void setBookingStatus(boolean bookingStatus) {
         this.bookingStatus = bookingStatus;
@@ -66,6 +67,6 @@ public class AdminBooking {
     // Optional: Override toString() to easily view the object data
     @Override
     public String toString() {
-        return "Booking ID: " + bookingId + ", Details: " + bookingDetails + ", User: " + User + ", Date: " + bookingDate + ", Status: " + bookingStatus;
+        return "Booking ID: " + bookingId + ", Details: " + bookingDetails + ", User: " + User + ", Date: " + date + ", Status: " + bookingStatus;
     }
 }

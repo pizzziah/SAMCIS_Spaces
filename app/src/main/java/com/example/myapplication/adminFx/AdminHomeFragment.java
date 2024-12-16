@@ -78,25 +78,40 @@ public class AdminHomeFragment extends Fragment {
                                         if (subTask.isSuccessful()) {
                                             // Iterate through the bookings for this user
                                             for (QueryDocumentSnapshot bookingDoc : subTask.getResult()) {
-                                                // Convert the document to AdminBooking object
+                                                // Convert Firestore document to AdminBooking object
                                                 AdminBooking booking = bookingDoc.toObject(AdminBooking.class);
-                                                booking.setBookingId(bookingDoc.getId()); // Store document ID
 
-                                                // Log the fetched booking data
-                                                Log.d("BookingData", "Fetched booking: " + booking.getBookingId());
+                                                // Extract additional fields if needed
+                                                String bookingId = bookingDoc.getId();
+                                                String details = bookingDoc.getString("details");
+                                                String status = bookingDoc.getString("status");
+                                                String date = bookingDoc.getString("date");
+
+                                                // Set properties into the AdminBooking object
+                                                booking.setBookingId(bookingId);
+                                                booking.setBookingDetails(details);
+                                                booking.setBookingStatus(Boolean.parseBoolean(status));
+                                                booking.setDate(date);
+
+                                                // Log the fetched booking details
+                                                Log.d("BookingDetails", "Fetched booking ID: " + bookingId +
+                                                        ", Details: " + details +
+                                                        ", Status: " + status +
+                                                        ", Date: " + date);
 
                                                 // Add the booking to the list
                                                 bookingList.add(booking);
                                             }
 
                                             // Log the size of the list after adding the bookings
-                                            Log.d("BookingList", "Booking list size after adding bookings: " + bookingList.size());
+                                            Log.d("BookingList", "Booking list size: " + bookingList.size());
 
                                             // Notify the adapter to refresh the RecyclerView
                                             adminBookingAdapter.notifyDataSetChanged();
                                         } else {
                                             // Handle error fetching bookings for this user
-                                            Log.e("FirestoreError", "Error fetching bookings for user: " + userDoc.getId(), subTask.getException());
+                                            Log.e("FirestoreError", "Error fetching bookings for user: " + userDoc.getId(),
+                                                    subTask.getException());
                                         }
                                     });
                         }

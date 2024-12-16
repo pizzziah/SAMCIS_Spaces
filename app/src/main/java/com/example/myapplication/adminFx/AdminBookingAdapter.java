@@ -46,8 +46,10 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
         AdminBooking booking = bookingList.get(position);
 
         // Bind the booking details to the UI
-        holder.textViewBookingId.setText("Booking ID: " + booking.getBookingId());
+        holder.textViewBookingId.setText("Booking ID: " + booking.getUser());
         holder.textViewBookingDetails.setText("Details: " + booking.getBookingDetails());
+        holder.textViewBookingDate.setText("Booking Date: "  + booking.getDate());
+        holder.textViewStatus.setText("Status: "  + booking.getBookingStatus());
 
         // View Details Button
         holder.buttonViewDetails.setOnClickListener(v -> showBookingDetailsDialog(booking));
@@ -70,7 +72,7 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
         builder.setTitle("Booking Details")
                 .setMessage("Booking ID: " + booking.getBookingId() + "\n" +
                         "Details: " + booking.getBookingDetails() + "\n" +
-                        "Booking Date: " + booking.getBookingDate() + "\n" +
+                        "Booking Date: " + booking.getDate() + "\n" +
                         "Status: " + booking.getBookingStatus())
                 .setPositiveButton("OK", null)
                 .show();
@@ -138,15 +140,17 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewBookingId, textViewBookingDetails;
+        TextView textViewBookingId, textViewBookingDetails, textViewBookingDate, textViewStatus;
         Button buttonViewDetails, buttonApprove, buttonDeny;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // Initialize UI components
-            textViewBookingId = itemView.findViewById(R.id.textViewBookingId);
+            textViewBookingId = itemView.findViewById(R.id.textViewName);
             textViewBookingDetails = itemView.findViewById(R.id.textViewBookingDetails);
+            textViewBookingDate = itemView.findViewById(R.id.textViewBookingDate);
             buttonViewDetails = itemView.findViewById(R.id.buttonViewDetails);
+            textViewStatus = itemView.findViewById(R.id.textViewStatus);
             buttonApprove = itemView.findViewById(R.id.buttonApprove);
             buttonDeny = itemView.findViewById(R.id.buttonDeny);
         }
