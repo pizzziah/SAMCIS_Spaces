@@ -1,91 +1,83 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/bg_blue_gradient"
     android:padding="30dp">
 
-    <!-- Heading -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Admin Booking"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:textColor="@color/yellow"
-        android:fontFamily="@font/montserrat_bold"
-        android:layout_marginBottom="30dp" />
-
-    <!-- Button Container for Filtering -->
-    <LinearLayout
-        android:id="@+id/buttonContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <!-- Pending Button -->
-        <Button
-            android:id="@+id/pendingBttn"
-            android:text="Pending"
-            android:layout_width="160dp"
-            android:layout_height="55dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="#99D7D7D7"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:fontFamily="@font/montserrat_bold" />
-
-        <!-- Approved Button -->
-        <Button
-            android:id="@+id/approvedBttn"
-            android:text="Approved"
-            android:layout_width="160dp"
-            android:layout_height="55dp"
-            android:backgroundTint="#9DFFBF55"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:fontFamily="@font/montserrat_bold" />
-    </LinearLayout>
-
-    <!-- Bookings Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp"
-        android:background="@color/blue"
-        android:padding="15dp">
+        android:orientation="vertical">
 
-        <!-- Back Button -->
-        <ImageButton
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_back_bttn_black"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="Back button"
-            android:layout_marginBottom="10dp"/>
-
-        <!-- Booking List Header -->
+        <!-- Heading -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Booking Lists"
-            android:textColor="@color/yellow"
+            android:text="Admin Booking"
+            android:textSize="40sp"
             android:textStyle="bold"
-            android:textSize="18sp"
+            android:textColor="@color/yellow"
             android:fontFamily="@font/montserrat_bold"
-            android:layout_marginTop="10dp" />
+            android:layout_marginBottom="30dp" />
 
-        <!-- RecyclerView to display bookings -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewBookings"
+        <!-- Bookings Section -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="600dp"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="16dp"
+            android:background="@color/blue"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <!-- Back Button -->
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="Back button"
+                android:src="@drawable/ic_back_bttn_black" />
+
+            <!-- Booking List Header -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="Booking Lists"
+                android:textColor="@color/yellow"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- RecyclerView for Active Bookings -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewBookings"
+                android:layout_width="match_parent"
+                android:layout_height="292dp"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center" />
+
+            <!-- Text Label for Archived Bookings -->
+            <TextView
+                android:id="@+id/archivedBookingsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Archived Bookings"
+                android:textSize="18sp"
+                android:padding="16dp"
+                android:textColor="@color/yellow"
+                android:textStyle="bold"/>
+
+            <!-- RecyclerView for Archived Bookings -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/Approved"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

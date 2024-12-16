@@ -32,12 +32,10 @@ public class AdminHomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.a_fragment_home, container, false);
 
-        // Initialize Firestore and RecyclerView
         db = FirebaseFirestore.getInstance();
-        recyclerView = rootView.findViewById(R.id.recyclerViewBookings); // Updated ID
+        recyclerView = rootView.findViewById(R.id.recyclerViewBookings);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setNestedScrollingEnabled(false);
 
@@ -45,7 +43,6 @@ public class AdminHomeFragment extends Fragment {
         adminBookingAdapter = new AdminBookingAdapter(bookingList, getContext());
         recyclerView.setAdapter(adminBookingAdapter);
 
-        // Fetch bookings from Firestore
         fetchBookings();
 
         return rootView;
@@ -53,13 +50,10 @@ public class AdminHomeFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void fetchBookings() {
-        // Reference to the Firestore collection for all users
         CollectionReference usersCollection = db.collection("Users");
 
-        // Log the Firestore path for debugging purposes
         Log.d("FirestorePath", "Fetching all bookings from all users");
 
-        // Fetch all users' bookings from Firestore
         usersCollection.get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -83,18 +77,21 @@ public class AdminHomeFragment extends Fragment {
 
                                                 // Extract additional fields if needed
                                                 String bookingId = bookingDoc.getId();
+                                                String name = bookingDoc.getString("name"); // Fetch 'name' field
                                                 String details = bookingDoc.getString("details");
                                                 String status = bookingDoc.getString("status");
                                                 String date = bookingDoc.getString("date");
 
                                                 // Set properties into the AdminBooking object
                                                 booking.setBookingId(bookingId);
+                                                booking.setName(name);
                                                 booking.setBookingDetails(details);
                                                 booking.setBookingStatus(Boolean.parseBoolean(status));
                                                 booking.setDate(date);
 
                                                 // Log the fetched booking details
                                                 Log.d("BookingDetails", "Fetched booking ID: " + bookingId +
+                                                        ", Name: " + name + // Log the name
                                                         ", Details: " + details +
                                                         ", Status: " + status +
                                                         ", Date: " + date);
@@ -122,5 +119,6 @@ public class AdminHomeFragment extends Fragment {
                     }
                 });
     }
+
 }
 
