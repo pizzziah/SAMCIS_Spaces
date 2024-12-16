@@ -18,16 +18,21 @@ import com.example.myapplication.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapter.ViewHolder> {
 
     private List<AdminBooking> bookingList;
+    private List<AdminBooking> approvedList; // List to store approved bookings
+    private List<AdminBooking> deniedList; // List to store denied bookings
     private Context context;
     private FirebaseFirestore db;
 
     public AdminBookingAdapter(List<AdminBooking> bookingList, Context context) {
         this.bookingList = bookingList;
+        this.approvedList = new ArrayList<>();
+        this.deniedList = new ArrayList<>();
         this.context = context;
         this.db = FirebaseFirestore.getInstance();
     }
@@ -42,11 +47,11 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Get the current booking item
+        // Determine which list the booking comes from (approved or denied)
         AdminBooking booking = bookingList.get(position);
 
         // Bind the booking details to the UI
-        holder.textViewBookingId.setText("Booking ID: " + booking.getUser());
+        holder.textViewName.setText("Name " + booking.getName());
         holder.textViewBookingDetails.setText("Details: " + booking.getBookingDetails());
         holder.textViewBookingDate.setText("Booking Date: "  + booking.getDate());
         holder.textViewStatus.setText("Status: "  + booking.getBookingStatus());
@@ -78,26 +83,43 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
                 .show();
     }
 
+    // Show approved bookings
+    public void showApprovedBookings() {
+        for (AdminBooking booking : approvedList) {
+            Log.d("ApprovedBooking", "Approved Booking ID: " + booking.getBookingId() + ", Status: " + booking.getBookingStatus());
+        }
+    }
+
+    // Show denied bookings
+    public void showDeniedBookings() {
+        for (AdminBooking booking : deniedList) {
+            Log.d("DeniedBooking", "Denied Booking ID: " + booking.getBookingId() + ", Status: " + booking.getBookingStatus());
+        }
+    }
+
     // Approve Booking by updating its status in Firestore
     private void approveBooking(String bookingId, int position) {
-        // Reference to the Users collection
         db.collection("Users")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot userDoc : task.getResult()) {
-                            // Reference the bookings subcollection for each user
                             userDoc.getReference()
                                     .collection("bookings")
-                                    .document(bookingId) // Use the specific booking ID you want to update
-                                    .update("status", "true")
+                                    .document(bookingId)
+                                    .update("status", "approved")  // Set status to approved
                                     .addOnSuccessListener(aVoid -> {
+                                        // Add to approvedList and remove from bookingList
+                                        AdminBooking approvedBooking = bookingList.get(position);
+                                        approvedList.add(approvedBooking);
+                                        bookingList.remove(position);
+
                                         Toast.makeText(context, "Booking approved successfully!", Toast.LENGTH_SHORT).show();
-                                        Log.d("UpdateBooking", "Updated booking ID: " + bookingId + " for user: " + userDoc.getId());
-                                        notifyItemChanged(position); // Refresh the item in the list
+                                        Log.d("UpdateBooking", "Booking approved with ID: " + bookingId + " for user: " + userDoc.getId());
+                                        notifyItemRemoved(position);
                                     })
                                     .addOnFailureListener(e -> {
-                                        Log.e("UpdateBooking", "Error updating booking ID: " + bookingId + " for user: " + userDoc.getId(), e);
+                                        Log.e("UpdateBooking", "Error approving booking ID: " + bookingId + " for user: " + userDoc.getId(), e);
                                         Toast.makeText(context, "Error approving booking", Toast.LENGTH_SHORT).show();
                                     });
                         }
@@ -106,26 +128,28 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
                         Toast.makeText(context, "Error fetching users", Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
 
     // Deny Booking by updating its status in Firestore
     private void denyBooking(String bookingId, int position) {
-        // Fetch all users from the "Users" collection
         db.collection("Users")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot userDoc : task.getResult()) {
-                            // Access the "bookings" subcollection for each user
                             userDoc.getReference()
                                     .collection("bookings")
-                                    .document(bookingId) // Specific booking ID to deny
-                                    .update("status", "false")
+                                    .document(bookingId)
+                                    .update("status", "denied")  // Set status to denied
                                     .addOnSuccessListener(aVoid -> {
+                                        // Add to deniedList and remove from bookingList
+                                        AdminBooking deniedBooking = bookingList.get(position);
+                                        deniedList.add(deniedBooking);
+                                        bookingList.remove(position);
+
                                         Toast.makeText(context, "Booking denied successfully!", Toast.LENGTH_SHORT).show();
-                                        Log.d("DenyBooking", "Booking denied: " + bookingId + " for user: " + userDoc.getId());
-                                        notifyItemChanged(position); // Refresh the list item
+                                        Log.d("DenyBooking", "Booking denied with ID: " + bookingId + " for user: " + userDoc.getId());
+                                        notifyItemRemoved(position);
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.e("DenyBooking", "Error denying booking for user: " + userDoc.getId(), e);
@@ -138,15 +162,14 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
                 });
     }
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewBookingId, textViewBookingDetails, textViewBookingDate, textViewStatus;
+        TextView textViewBookingId, textViewBookingDetails, textViewBookingDate, textViewStatus, textViewName;
         Button buttonViewDetails, buttonApprove, buttonDeny;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // Initialize UI components
-            textViewBookingId = itemView.findViewById(R.id.textViewName);
+            textViewName = itemView.findViewById(R.id.textViewName);
             textViewBookingDetails = itemView.findViewById(R.id.textViewBookingDetails);
             textViewBookingDate = itemView.findViewById(R.id.textViewBookingDate);
             buttonViewDetails = itemView.findViewById(R.id.buttonViewDetails);

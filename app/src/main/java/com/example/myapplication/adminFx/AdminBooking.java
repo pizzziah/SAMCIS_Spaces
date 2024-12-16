@@ -4,6 +4,7 @@ public class AdminBooking {
 
     private String bookingId;
     private String bookingDetails;
+    private String name;
     private String User;
     private String date;
     private boolean
@@ -14,12 +15,14 @@ public class AdminBooking {
     }
 
     // Constructor to initialize booking details
-    public AdminBooking(String bookingId, String bookingDetails, String User, String bookingDate, boolean bookingStatus) {
+    public AdminBooking(String bookingId, String bookingDetails, String User, String bookingDate, boolean bookingStatus, String name) {
         this.bookingId = bookingId;
         this.bookingDetails = bookingDetails;
         this.User = User;
         this.date = date;
         this.bookingStatus = bookingStatus;
+        this.name = name;
+
     }
 
     // Getter and setter methods for each field
@@ -41,6 +44,14 @@ public class AdminBooking {
 
     public String getUser() {
         return User;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setUser(String User) {
