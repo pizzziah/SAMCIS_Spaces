@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
-import com.example.myapplication.adminFx.AdminProfileFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -56,9 +55,9 @@ public class AdminEditProfileActivity extends AppCompatActivity {
         updateFieldVisibility();
 
         cancelBttn.setOnClickListener(v -> {
-            startActivity(new Intent(AdminEditProfileActivity.this, AdminProfileFragment.class));
-            finish();
+            startActivity(new Intent(AdminEditProfileActivity.this, com.example.myapplication.adminFx.AdminEditProfileActivity.class));
         });
+
 
         saveBttn.setOnClickListener(v -> updateUserProfile());
 
@@ -132,7 +131,7 @@ public class AdminEditProfileActivity extends AppCompatActivity {
                             }
                         }
 
-                        Intent intent = new Intent(AdminEditProfileActivity.this, AdminProfileFragment.class);
+                        Intent intent = new Intent(AdminEditProfileActivity.this, com.example.myapplication.adminFx.AdminEditProfileActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
