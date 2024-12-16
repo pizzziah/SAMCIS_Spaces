@@ -73,12 +73,11 @@ public class UserBookingFragment extends Fragment {
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                             String date = doc.getString("date");
                             String venueName = doc.getString("venueName");
-                            Boolean status = doc.getBoolean("status"); // Fetch the status field
                             String id = doc.getId();
 
                             // Ensure no null values in critical fields
                             if (date != null && venueName != null) {
-                                Booking booking = new Booking(id, venueName, date, status); // Include status
+                                Booking booking = new Booking(id, venueName, date); // Include status
                                 pastList.add(booking);
                             }
                         }
