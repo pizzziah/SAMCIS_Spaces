@@ -1,122 +1,95 @@
 package com.example.myapplication.adminFx;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdminHomeFragment extends Fragment {
 
-    private RecyclerView recyclerViewBookings;
-    private RecyclerView recyclerViewApproved;
-    private RecyclerView recyclerViewArchived;
+    private RecyclerView recyclerView;
     private AdminBookingAdapter adminBookingAdapter;
-
-    private List<AdminBooking> pendingList = new ArrayList<>();
-    private List<AdminBooking> approvedList = new ArrayList<>();
-    private List<AdminBooking> archivedList = new ArrayList<>();
-
+    private List<AdminBooking> bookingList;
     private FirebaseFirestore db;
 
-    @Nullable
+    @SuppressLint("MissingInflatedId")
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.a_fragment_home, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.a_fragment_home, container, false);
 
-        recyclerViewBookings = view.findViewById(R.id.recyclerViewBookings);
-        recyclerViewApproved = view.findViewById(R.id.recyclerViewApproved);
-        recyclerViewArchived = view.findViewById(R.id.recyclerViewArchived);
-
+        // Initialize Firestore and RecyclerView
         db = FirebaseFirestore.getInstance();
+        recyclerView = rootView.findViewById(R.id.recyclerViewAdminBookings); // Updated ID
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adminBookingAdapter = new AdminBookingAdapter(pendingList, approvedList, archivedList, getContext());
+        bookingList = new ArrayList<>();
+        adminBookingAdapter = new AdminBookingAdapter(bookingList, getContext());
+        recyclerView.setAdapter(adminBookingAdapter);
 
-        recyclerViewBookings.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewApproved.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewArchived.setLayoutManager(new LinearLayoutManager(getContext()));
+        // Fetch bookings from Firestore
+        fetchBookings();
 
-        recyclerViewBookings.setAdapter(adminBookingAdapter);
-        recyclerViewApproved.setAdapter(adminBookingAdapter);
-        recyclerViewArchived.setAdapter(adminBookingAdapter);
-
-        getBookings();
-
-        return view;
+        return rootView;
     }
 
-    private void getBookings() {
-        db.collection("Users")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (queryDocumentSnapshots != null) {
-                        Log.d("Firestore", "Retrieved Users successfully");
+    @SuppressLint("NotifyDataSetChanged")
+    private void fetchBookings() {
+        // Reference to the Users collection
+        CollectionReference usersCollection = db.collection("Users");
 
-                        for (var document : queryDocumentSnapshots) {
-                            Log.d("Firestore", "User document ID: " + document.getId());
+// Iterate through all users dynamically
+        usersCollection.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        bookingList.clear(); // Clear the list to avoid duplicates
 
-                            // Retrieve bookings subcollection for each user
-                            db.collection("Users")
-                                    .document(document.getId())
-                                    .collection("bookings")
-                                    .get()
-                                    .addOnSuccessListener(subQueryDocumentSnapshots -> {
-                                        if (subQueryDocumentSnapshots != null) {
-                                            for (var bookingDoc : subQueryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot userDoc : task.getResult()) {
+                            // Dynamically reference each user's bookings subcollection
+                            CollectionReference bookingsSubcollection = userDoc.getReference().collection("bookings");
+
+                            // Fetch the bookings for this user
+                            bookingsSubcollection.get()
+                                    .addOnCompleteListener(subTask -> {
+                                        if (subTask.isSuccessful()) {
+                                            for (QueryDocumentSnapshot bookingDoc : subTask.getResult()) {
                                                 AdminBooking booking = bookingDoc.toObject(AdminBooking.class);
+                                                booking.setBookingId(bookingDoc.getId()); // Store document ID
 
-                                                if (booking == null) {
-                                                    Log.e("Firestore", "Booking document conversion failed.");
-                                                    continue;
-                                                }
-
-                                                Log.d("Booking Status", "Status: " + booking.getStatus() + ", Archived: " + booking.isArchived());
-
-                                                if (booking.getStatus() != null && booking.getStatus().equals("approved")) {
-                                                    approvedList.add(booking);
-                                                } else if (booking.isArchived()) {
-                                                    archivedList.add(booking);
-                                                } else {
-                                                    pendingList.add(booking);
-                                                }
+                                                bookingList.add(booking); // Add to the list
+                                                Log.d("BookingData", "Fetched booking from user: " + userDoc.getId());
                                             }
+
+                                            // Update the RecyclerView
                                             adminBookingAdapter.notifyDataSetChanged();
+                                        } else {
+                                            Log.e("FirestoreError", "Error fetching bookings for user: " + userDoc.getId(), subTask.getException());
                                         }
-                                    })
-                                    .addOnFailureListener(subError -> Log.e("Booking Retrieval Error", subError.getMessage()));
+                                    });
                         }
+                    } else {
+                        Log.e("FirestoreError", "Error fetching users", task.getException());
                     }
-                })
-                .addOnFailureListener(e -> Log.e("Admin Booking Fragment", "User retrieval error: " + e.getMessage()));
-    }
-
-    private void approveBooking(AdminBooking booking) {
-        booking.setStatus("approved");
-        booking.setArchived(true);
-
-        db.collection("Users").document(booking.getUser()).collection("bookings")
-                .document(booking.getBookingId())
-                .update("status", "approved", "isArchived", true)
-                .addOnSuccessListener(aVoid -> {
-                    approvedList.add(booking);
-                    pendingList.remove(booking);
-                    archivedList.add(booking);
-                    adminBookingAdapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("AdminHomeFragment", "Failed to approve booking", e);
                 });
+
+
     }
 }

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_blue_gradient"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="30dp">
 
     <LinearLayout
@@ -53,7 +54,7 @@
 
             <!-- RecyclerView for Active Bookings -->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewBookings"
+                android:id="@+id/recyclerViewAdminBookings"
                 android:layout_width="match_parent"
                 android:layout_height="454dp"
                 android:layout_gravity="center"

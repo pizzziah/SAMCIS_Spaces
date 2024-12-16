@@ -54,7 +54,7 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
         holder.textViewBookingId.setText("Booking ID: " + booking.getBookingId());
         holder.textViewBookingDetails.setText("Details: " + booking.getBookingDetails());
         holder.textViewBookingDate.setText("Booking Date: "  + booking.getDate());
-        holder.textViewStatus.setText("Status: "  + booking.getBookingStatus());
+        holder.textViewStatus.setText("Status: "  + booking.getStatus());
 
         // View Details Button
         holder.buttonViewDetails.setOnClickListener(v -> showBookingDetailsDialog(booking));
@@ -78,7 +78,7 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
                 .setMessage("Booking ID: " + booking.getBookingId() + "\n" +
                         "Details: " + booking.getBookingDetails() + "\n" +
                         "Booking Date: " + booking.getDate() + "\n" +
-                        "Status: " + booking.getBookingStatus())
+                        "Status: " + booking.getStatus())
                 .setPositiveButton("OK", null)
                 .show();
     }
