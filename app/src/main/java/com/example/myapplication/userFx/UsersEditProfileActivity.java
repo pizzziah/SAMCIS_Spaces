@@ -58,7 +58,6 @@ public class UsersEditProfileActivity extends AppCompatActivity {
 
         cancelBttn.setOnClickListener(v -> {
             startActivity(new Intent(UsersEditProfileActivity.this, UserProfileFragment.class));
-            finish();
         });
 
         saveBttn.setOnClickListener(v -> updateUserProfile());
