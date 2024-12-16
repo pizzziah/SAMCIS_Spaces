@@ -51,7 +51,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <!-- RecyclerView for Active Bookings -->
+            <!-- RecyclerView for Pending Bookings -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewBookings"
                 android:layout_width="match_parent"
@@ -59,23 +59,38 @@
                 android:layout_marginTop="8dp"
                 android:layout_gravity="center" />
 
+            <!-- Text Label for Approved Bookings -->
+            <TextView
+                android:id="@+id/approvedTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Approved Bookings"
+                android:textColor="#008000"
+                android:padding="10dp"
+                android:textStyle="bold" />
+
+            <!-- RecyclerView for Approved Bookings -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewApproved"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <!-- Text Label for Archived Bookings -->
             <TextView
                 android:id="@+id/archivedBookingsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Archived Bookings"
+                android:textColor="@color/yellow"
                 android:textSize="18sp"
                 android:padding="16dp"
-                android:textColor="@color/yellow"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <!-- RecyclerView for Archived Bookings -->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/Approved"
+                android:id="@+id/recyclerViewArchived"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </LinearLayout>
